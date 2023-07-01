@@ -42,7 +42,7 @@
       <ChoiceBox fx:id="CBJenis" layoutX="299.0" layoutY="445.0" prefHeight="55.0" prefWidth="209.0" styleClass="TextField2" />
       <DatePicker fx:id="DPKadaluwarsa" layoutX="537.0" layoutY="445.0" pickOnBounds="false" prefHeight="55.0" prefWidth="209.0" promptText="Tanggal Kadaluwarsa" styleClass="DatePicker" stylesheets="@../css/CSSFoodCycle.css" />
       <Button fx:id="tawarkan" layoutX="219.0" layoutY="535.0" mnemonicParsing="false" onAction="#handleButtonTawarkanAction" prefHeight="44.0" prefWidth="362.0" styleClass="buttonBiasa" text="Tawarkan" textFill="#00000092" />
-      <ImageView fitHeight="207.0" fitWidth="584.0" layoutX="93.0" layoutY="14.0">
+      <ImageView fitHeight="179.0" fitWidth="573.0" layoutX="112.0" layoutY="85.0">
          <image>
             <Image url="@../media/Penawaran2.png" />
          </image>

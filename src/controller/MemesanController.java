@@ -6,7 +6,6 @@ package controller;
 
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,12 +21,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Makanan;
@@ -104,16 +106,16 @@ public class MemesanController implements Initializable {
         String metodePengambilan = CBpengambilan.getValue();
 
         if (selectedMakanan != null) {
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan Makanan")) {
+            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 // Implementasi logika untuk pesanan
                 showErrorAlert("Metode Pengambilan", "Harap pilih metode pengambilan terlebih dahulu.");
-            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan Makanan")){
+            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan")){
                 System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
             }
         } else if (selectedMakanan == null){
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan Makanan")) {
+            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 showErrorAlert("Pilih Makanan dan Metode Pengambilan", "Harap pilih makanan dan metode pengambilan terlebih dahulu.");
-            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan Makanan")){
+            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan")){
                 showErrorAlert("Pilih Makanan", "Harap pilih makanan terlebih dahulu.");
             }
         }
@@ -145,10 +147,18 @@ public class MemesanController implements Initializable {
     }
 
     private void showErrorAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResource("/media/attention.png").toString()));
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/CSSFoodCycle.css").toExternalForm());
+        dialogPane.getStyleClass().add("alert-error");
+
         alert.showAndWait();
     }
 
@@ -171,7 +181,7 @@ public class MemesanController implements Initializable {
         loadDataFromDatabase();
 
         ObservableList<String> options = FXCollections.observableArrayList(
-            "Pilih Metode Pengambilan Makanan",
+            "Pilih Metode Pengambilan",
             "Makanan Diantar",
             "Ambil Langsung"
         );

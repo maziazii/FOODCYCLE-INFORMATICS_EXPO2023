@@ -23,13 +23,13 @@
       </ImageView>
       <TableView fx:id="TVinbox" layoutX="20.0" layoutY="100.0" prefHeight="430.0" prefWidth="760.0">
         <columns>
-          <TableColumn fx:id="TCidPemesanan" prefWidth="110.0" text="Id Pemesanan" />
+          <TableColumn fx:id="TCidPemesanan" prefWidth="100.0" text="Id Pesan" />
           <TableColumn fx:id="TCstatus" prefWidth="110.0" text="Status" />
             <TableColumn fx:id="TCidMakanan" prefWidth="110.0" text="Id Makanan" />
             <TableColumn fx:id="TCnama" prefWidth="100.0" text="Nama" />
             <TableColumn fx:id="TCjumlah" prefWidth="75.0" text="Jumlah" />
-            <TableColumn fx:id="TCpengambilan" prefWidth="100.0" text="Pengambilan" />
-            <TableColumn fx:id="TClokasi" prefWidth="155.0" text="Lokasi" />
+            <TableColumn fx:id="TCpengambilan" prefWidth="120.0" text="Pengambilan" />
+            <TableColumn fx:id="TClokasi" prefWidth="145.0" text="Lokasi" />
         </columns>
       </TableView>
       <ChoiceBox fx:id="CBstatus" layoutX="530.0" layoutY="542.0" prefHeight="40.0" prefWidth="250.0" styleClass="TextField2" />

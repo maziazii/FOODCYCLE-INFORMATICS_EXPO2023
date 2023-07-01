@@ -34,7 +34,7 @@
         </columns>
       </TableView>
       <Button fx:id="pesan" layoutX="195.0" layoutY="535.0" mnemonicParsing="false" onAction="#handleButtonPilihAction" prefHeight="44.0" prefWidth="397.0" styleClass="buttonBiasa" text="Pesan" />
-      <ChoiceBox fx:id="CBpengambilan" layoutX="281.0" layoutY="484.0" onDragDetected="#handleButtonPilihAction" prefHeight="40.0" prefWidth="220.0" styleClass="TextField2" />
+      <ChoiceBox fx:id="CBpengambilan" layoutX="281.0" layoutY="484.0" prefHeight="40.0" prefWidth="220.0" styleClass="TextField2" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" layoutX="20.0" layoutY="485.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangle" width="220.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="37.0" layoutY="491.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHijau2" width="30.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="195.0" layoutY="492.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHijau2" width="30.0" />

@@ -3,6 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +21,7 @@ import javafx.stage.Stage;
 public class InboxProdusenController implements Initializable {
     
     @FXML
-    private ChoiceBox<?> CBstatus;
+    private ChoiceBox<String> CBstatus;
 
     @FXML
     private TableColumn<?, ?> TCidMakanan;
@@ -71,6 +73,24 @@ public class InboxProdusenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        ObservableList<String> options = FXCollections.observableArrayList(
+            "Pilih Status Pengambilan",
+            "Masuk",
+            "Tunggu Diambil",
+            "Sedang Diantar",
+            "Diterima"
+        );
+
+        CBstatus.setItems(options);
+        CBstatus.getSelectionModel().selectFirst();
+
+        CBstatus.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Pilih Status Pengambilan")) {
+                CBstatus.getSelectionModel().clearSelection();
+        } else {
+                // Lakukan tindakan lain sesuai pilihan pengguna
+            }
+        });
     }
 
 }

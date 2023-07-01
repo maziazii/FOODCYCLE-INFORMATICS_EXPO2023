@@ -22,12 +22,12 @@
       </ImageView>
       <TableView layoutX="20.0" layoutY="100.0" prefHeight="480.0" prefWidth="760.0">
         <columns>
-          <TableColumn fx:id="TCidPemesanan" prefWidth="110.0" text="Id Pemesanan" />
+          <TableColumn fx:id="TCidPemesanan" prefWidth="110.0" text="Id Pesan" />
           <TableColumn fx:id="TCidMakanan" prefWidth="110.0" text="Id Makanan" />
             <TableColumn fx:id="TCnama" prefWidth="110.0" text="Nama" />
             <TableColumn fx:id="TCjumlah" prefWidth="110.0" text="Jumlah" />
-            <TableColumn fx:id="TCpengambilan" prefWidth="110.0" text="Pengambilaan" />
-            <TableColumn fx:id="TClokasi" prefWidth="210.0" text="Lokasi" />
+            <TableColumn fx:id="TCpengambilan" prefWidth="120.0" text="Pengambilan" />
+            <TableColumn fx:id="TClokasi" prefWidth="200.0" text="Lokasi" />
         </columns>
       </TableView>
    </children>
