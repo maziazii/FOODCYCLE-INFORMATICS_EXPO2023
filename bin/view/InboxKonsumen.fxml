@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="anchor-pane" stylesheets="@../css/CSSFoodCycle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InboxKonsumenController">
+   <children>
+      <Button fx:id="kemballi" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleButtonKembaliAction" prefHeight="35.0" prefWidth="170.0" styleClass="buttonBiasa" text="Kembali" />
+      <ImageView layoutX="37.0" layoutY="32.0">
+         <image>
+            <Image url="@../media/Back.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="55.0" fitWidth="310.0" layoutX="480.0" layoutY="15.0">
+         <image>
+            <Image url="@../media/Inbox1.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="TVriwayat" layoutX="20.0" layoutY="100.0" prefHeight="480.0" prefWidth="760.0">
+        <columns>
+          <TableColumn fx:id="TCidPemesanan" prefWidth="110.0" text="Id Pemesanan" />
+          <TableColumn fx:id="TCstatus" prefWidth="110.0" text="Status" />
+            <TableColumn fx:id="TCidMakanan" prefWidth="110.0" text="Id Makanan" />
+            <TableColumn fx:id="TCnama" prefWidth="100.0" text="Nama" />
+            <TableColumn fx:id="TCjumlah" prefWidth="75.0" text="Jumlah" />
+            <TableColumn fx:id="TCpengambilan" prefWidth="100.0" text="Pengambilan" />
+            <TableColumn fx:id="TClokasi" prefWidth="155.0" text="Lokasi" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

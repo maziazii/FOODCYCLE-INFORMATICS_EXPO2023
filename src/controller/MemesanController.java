@@ -1,0 +1,199 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
+ */
+package controller;
+
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+import database.DBConnection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import model.Makanan;
+
+/**
+ *
+ * @author zain
+ */
+public class MemesanController implements Initializable {
+    
+    @FXML
+    private ChoiceBox<String> CBpengambilan;
+
+    @FXML
+    private Label LjumlahPesanan;
+
+    @FXML
+    private Label Llokasi;
+
+    @FXML
+    private TableColumn<Makanan, String> TCJenis;
+
+    @FXML
+    private TableColumn<Makanan, Integer> TCJumlah;
+    
+    @FXML
+    private TableColumn<Makanan, String> TCKadaluwarsa;
+    
+    @FXML
+    private TableColumn<Makanan, String> TCLokasi;
+
+    @FXML
+    private TableColumn<Makanan, String> TCNama;
+
+    @FXML
+    private TableColumn<Makanan, String> TCTanggal;
+
+    @FXML
+    private TableView<Makanan> TVMemesan;
+    
+    @FXML
+    private Button kembali;
+
+    @FXML
+    private Button jumlah;
+
+    @FXML
+    private Button kurang;
+    
+    @FXML
+    private Button pesan;
+    
+    private ObservableList<Makanan> makananList = FXCollections.observableArrayList();
+    
+    @FXML
+    private void handleButtonKembaliAction(ActionEvent event)  throws Exception{
+        System.out.println("tes");
+        FXMLLoader loader = new FXMLLoader(); 
+        loader.setLocation(HomeKonsumenController.class.getResource("/view/HomeKonsumen.fxml"));
+        Stage dialogStage = new Stage(); 
+        dialogStage.setTitle("testing");
+        dialogStage.initModality(Modality.APPLICATION_MODAL); 
+        Scene scene = new Scene(loader.load()); 
+        dialogStage.setScene(scene);
+        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
+        dialogStage.showAndWait();
+        Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
+        currentStage.close();
+    }
+    
+    @FXML
+    private void handleButtonPilihAction(ActionEvent event) throws Exception {
+        Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
+        String metodePengambilan = CBpengambilan.getValue();
+
+        if (selectedMakanan != null) {
+            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan Makanan")) {
+                // Implementasi logika untuk pesanan
+                showErrorAlert("Metode Pengambilan", "Harap pilih metode pengambilan terlebih dahulu.");
+            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan Makanan")){
+                System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
+            }
+        } else if (selectedMakanan == null){
+            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan Makanan")) {
+                showErrorAlert("Pilih Makanan dan Metode Pengambilan", "Harap pilih makanan dan metode pengambilan terlebih dahulu.");
+            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan Makanan")){
+                showErrorAlert("Pilih Makanan", "Harap pilih makanan terlebih dahulu.");
+            }
+        }
+    }
+    private void loadDataFromDatabase() {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT * FROM tbmakanan";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int idMakanan = resultSet.getInt("idMakanan");
+                String tanggalPenawaran = resultSet.getString("tanggalPenawaran");
+                String namaMakanan = resultSet.getString("namaMakanan");
+                int jumlahMakanan = resultSet.getInt("jumlahMakanan");
+                String lokasiPengambilan = resultSet.getString("lokasiPengambilan");
+                String jenisMakanan = resultSet.getString("jenisMakanan");
+                String tanggalKadaluwarsa = resultSet.getString("tanggalKadaluwarsa");
+
+                Makanan makanan = new Makanan(idMakanan, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa);
+                makananList.add(makanan);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Tampilkan alert kesalahan
+            showErrorAlert("Error", "Failed to load data from database.");
+        }
+    }
+
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+        TCTanggal.setCellValueFactory(new PropertyValueFactory<>("tanggalPenawaran"));
+        TCNama.setCellValueFactory(new PropertyValueFactory<>("namaMakanan"));
+        TCJumlah.setCellValueFactory(new PropertyValueFactory<>("jumlahMakanan"));
+        TCLokasi.setCellValueFactory(new PropertyValueFactory<>("lokasiPengambilan"));
+        TCJenis.setCellValueFactory(new PropertyValueFactory<>("jenisMakanan"));
+        TCKadaluwarsa.setCellValueFactory(new PropertyValueFactory<>("tanggalKadaluwarsa"));
+
+        // Mengatur ObservableList sebagai data sumber TableView
+        TVMemesan.setItems(makananList);
+
+        // Panggil metode untuk mengambil data dari database dan menambahkannya ke makananList
+        loadDataFromDatabase();
+
+        ObservableList<String> options = FXCollections.observableArrayList(
+            "Pilih Metode Pengambilan Makanan",
+            "Makanan Diantar",
+            "Ambil Langsung"
+        );
+
+        CBpengambilan.setItems(options);
+        CBpengambilan.getSelectionModel().selectFirst();
+
+        CBpengambilan.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Pilih Metode Pengambilan")) {
+                CBpengambilan.getSelectionModel().clearSelection();
+                // } else if (newValue.equals("Makanan Diantar")) {
+                //     // Tampilkan lokasi dari database DBregister di label
+                //     String username = getUsernameLoggedIn(); // Mendapatkan username yang sedang digunakan
+                //     String lokasiPengambilan = getLokasiPengambilan(username); // Mendapatkan lokasi pengambilan dari database DBregister berdasarkan username
+                //     Llokasi.setText(lokasiPengambilan);
+                // } else if (newValue.equals("Ambil Langsung")) {
+                //     // Tampilkan lokasi makanan dari database DBMakanan di label
+                //     String lokasiMakanan = getLokasiMakanan(); // Mendapatkan lokasi makanan dari database DBMakanan
+                //     Llokasi.setText(lokasiMakanan);
+        } else {
+                // Lakukan tindakan lain sesuai pilihan pengguna
+            }
+        });
+    }
+}

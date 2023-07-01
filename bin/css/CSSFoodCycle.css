@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+.anchor-pane{
+    -fx-background-color: #FFF8D6;
+    -fx-pref-height: 600;
+    -fx-pref-width: 800;
+}
+.alert-success {
+    -fx-background-color: #FDEA9E;
+    -fx-text-fill: #0000FF;
+    -fx-border-width: 2px;
+}
+.alert-success .text{
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 15px;
+    -fx-fill: #0000FF;
+    -fx-padding: 10px;
+}
+.alert-success .header{
+    -fx-background-color: #66CC99;
+}
+.alert-success .button{
+    -fx-background-color: #66CC99;
+    -fx-border-color: #0000FF; 
+}
+.alert-error{
+    -fx-background-color: #FDEA9E;
+    -fx-border-color: #FF0000; 
+    -fx-border-width: 2px;
+}
+.alert-error .text{
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 15px;
+    -fx-fill: #FF0000;
+    -fx-padding: 10px;
+}
+.alert-error .header{
+    -fx-background-color: #66CC99;
+}
+.alert-error .button{
+    -fx-background-color: #66CC99;
+    -fx-border-color: #FF0000; 
+}
+.choice-box {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-color: #66CC99;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 500;
+    -fx-font-size: 13px;
+    -fx-fill: #bdbcbc;
+    -fx-mark-color: #66CC99;
+}
+.choice-box .context-menu {
+    -fx-background-color: #FDEA9E; 
+    -fx-border-color: #66CC99;
+    -fx-pref-width: 210;
+}
+.choice-box .menu-item:focused { 
+    -fx-background-color: #FFD93E;
+}
+.choice-box .menu-item > .label {
+    -fx-text-fill: #BDBCBC; 
+}
+.choice-box .menu-item:focused > .label {
+    -fx-text-fill: #66CC99; 
+}
+.textHjauW500 {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 500;
+    -fx-font-size: 15px;
+    -fx-fill: #66CC99;
+}
+.text1{
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 500;
+    -fx-font-size: 18px;
+    -fx-fill: #66CC99;
+}
+.menu{
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 500;
+    -fx-font-size: 18px;
+    -fx-fill: rgba(0,0,0,0);
+}
+.textPutih900 {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 900;
+    -fx-font-size: 30px;
+    -fx-fill: #FFFFFF;
+}
+.rectangleKuningBR {
+    -fx-arc-width : 60;
+    -fx-arc-height : 60;
+    -fx-fill:#FFD93E;
+}
+.rectangleHiijauBR {
+    -fx-arc-width : 60;
+    -fx-arc-height : 60;
+    -fx-fill:#66CC99;
+}
+.buttonTransparan {
+    -fx-background-color: rgba(0,0,0,0);
+}
+.buttonTransparan1 {
+    -fx-background-color: rgba(0,0,0,0);
+}
+.buttonTransparan1 .text{
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 500;
+    -fx-font-size: 15px;
+    -fx-fill: #0000ff;
+}
+.buttonBiasa{
+    -fx-background-color: #66CC99;
+    -fx-background-radius: 30;
+    -fx-font-weight: 900;
+    -fx-fill: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 30;
+}
+.buttonBiasa .text{
+    -fx-font-weight: 900;
+    -fx-fill: #FFFFFF;
+    -fx-font-size : 20px;
+}
+.button:hover{
+    -fx-border-color: #FFD93E;
+}
+.button:pressed{
+    -fx-background-color: #FFD93E;
+}
+.TextField{
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-color: #66CC99;
+    -fx-border-width: 0px 0px 2px 0px;
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 500;
+    -fx-font-size: 15px;
+    -fx-fill: #66CC99;
+} 
+.TextField2{
+    -fx-border-width: 0px 0px 0px 0px;
+    -fx-background-color: #FDEA9E;
+    -fx-background-radius: 15px ;
+} 
+.PasswordField{
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-color: #66CC99;
+    -fx-border-width: 0px 0px 2px 0px;
+}
+
+.DatePicker{
+    -fx-control-inner-background:#FDEA9E;
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 500;
+    -fx-background-radius: 15 15 15 15;
+    -fx-font-size: 15px;
+    -fx-fill: #66CC99;
+}
+.date-picker > .text-field {
+    -fx-background-radius: 15 0 0 15;
+}
+.table-view{
+    -fx-background-color: #FDEA9E;
+    -fx-background-radius: 15 15 15 15;
+    -fx-font-family: 'Poppins';
+}
+.table-view .column-header {
+    -fx-background-color: #50B783; 
+    -fx-background-radius: 0px; 
+    -fx-font-size: 15px;
+    -fx-fill: #50B783;
+}
+.table-row-cell {
+    -fx-background-color: #FDEA9E; 
+    -fx-background-radius: 0px; 
+}
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #50B783;
+}
+.date-picker > .arrow-button {
+    -fx-background-radius: 0 15 15 0;
+}
+.text3 {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 700;
+    -fx-font-size: 20px;
+    -fx-fill: #66CC99;
+}
+
+.textHijau35px {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: 900;
+    -fx-font-size: 35px;
+    -fx-fill: #FDEA9E;
+}
+
+.text2 {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 900;
+    -fx-font-size: 18px;
+    -fx-fill: #66CC99;
+}
+
+.rectangleHijau2{
+    -fx-fill:#66CC99;
+}
+
+.text2Hitam {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-weight: 700;
+    -fx-font-size: 18px;
+    -fx-fill: #000000;
+}
+.rectangle
+{
+    -fx-fill:#FDEA9E;
+    -fx-arc-height: 30;
+    -fx-arc-width:30;
+}
+.TextField{
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-background-radius: 0;
+}
+
+
+

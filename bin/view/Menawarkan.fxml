@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" fx:id="controller" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: FFF8D6;" stylesheets="@../css/CSSFoodCycle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenawarkanController">
+   <children>
+      <Rectangle fx:id="myChoiceBox" fill="#66cc99" height="242.0" layoutX="18.0" layoutY="282.0" stroke="TRANSPARENT" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHiijauBR" width="764.0" />
+      <TextField fx:id="TFNamaMakanan" alignment="CENTER" layoutX="299.0" layoutY="362.0" prefHeight="58.0" prefWidth="209.0" promptText="Nama Makanan" styleClass="TextField2" />
+      <TextField fx:id="TFJumlahMakanan" alignment="CENTER" layoutX="537.0" layoutY="362.0" prefHeight="58.0" prefWidth="209.0" promptText="Jumlah Makanan" styleClass="TextField2" />
+      <TextField fx:id="TFLokasiPengambilan" alignment="CENTER" layoutX="53.0" layoutY="443.0" prefHeight="58.0" prefWidth="209.0" promptText=" Lokasi Pengambilan" styleClass="TextField2" />
+      <Text fill="#66cc99" layoutX="37.0" layoutY="331.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textHijau35px" text="Input Data Penawaran Makanan" textAlignment="CENTER" wrappingWidth="733.0">
+         <font>
+            <Font size="41.0" />
+         </font>
+      </Text>
+      <Button fx:id="kembali" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleButtonKembaliAction" prefHeight="26.0" prefWidth="168.0" styleClass="buttonBiasa" text="Kembali" textFill="#00000092">
+         <rotationAxis>
+            <Point3D />
+         </rotationAxis>
+      </Button>
+      <DatePicker fx:id="DPPenawaran" layoutX="53.0" layoutY="362.0" pickOnBounds="false" prefHeight="58.0" prefWidth="209.0" promptText="Tanggal Penawaran" styleClass="DatePicker" stylesheets="@../css/CSSFoodCycle.css" />
+      <ImageView layoutX="37.0" layoutY="28.0">
+         <image>
+            <Image url="@../media/Back.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="55.0" fitWidth="310.0" layoutX="480.0" layoutY="15.0">
+         <image>
+            <Image url="@../media/Penawaran1.png" />
+         </image>
+      </ImageView>
+      <ChoiceBox fx:id="CBJenis" layoutX="299.0" layoutY="445.0" prefHeight="55.0" prefWidth="209.0" styleClass="TextField2" />
+      <DatePicker fx:id="DPKadaluwarsa" layoutX="537.0" layoutY="445.0" pickOnBounds="false" prefHeight="55.0" prefWidth="209.0" promptText="Tanggal Kadaluwarsa" styleClass="DatePicker" stylesheets="@../css/CSSFoodCycle.css" />
+      <Button fx:id="tawarkan" layoutX="219.0" layoutY="535.0" mnemonicParsing="false" onAction="#handleButtonTawarkanAction" prefHeight="44.0" prefWidth="362.0" styleClass="buttonBiasa" text="Tawarkan" textFill="#00000092" />
+      <ImageView fitHeight="207.0" fitWidth="584.0" layoutX="93.0" layoutY="14.0">
+         <image>
+            <Image url="@../media/Penawaran2.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

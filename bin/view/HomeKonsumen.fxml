@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: FFF8D6;" stylesheets="@../css/CSSFoodCycle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeKonsumenController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#66cc99" height="400.0" layoutX="540.0" layoutY="126.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHiijauBR" width="240.0" />
+      <Button fx:id="riwayat" layoutX="540.0" layoutY="126.0" mnemonicParsing="false" onAction="#handleButtonRiwayatAction" prefHeight="400.0" prefWidth="240.0" styleClass="buttonTransparan" textAlignment="CENTER" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffd93e" height="320.0" layoutX="540.0" layoutY="125.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleKuningBR" width="240.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#66cc99" height="400.0" layoutX="280.0" layoutY="126.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHiijauBR" width="240.0" />
+      <Button fx:id="inbox" layoutX="280.0" layoutY="126.0" mnemonicParsing="false" onAction="#handleButtonInboxAction" prefHeight="400.0" prefWidth="240.0" styleClass="buttonTransparan" stylesheets="@../css/CSSFoodCycle.css" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffd93e" height="320.0" layoutX="280.0" layoutY="125.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleKuningBR" width="240.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#66cc99" height="400.0" layoutX="20.0" layoutY="126.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHiijauBR" width="240.0" />
+      <Button fx:id="memesan" layoutX="20.0" layoutY="126.0" mnemonicParsing="false" onAction="#handleButtonMemesanAction" prefHeight="400.0" prefWidth="240.0" styleClass="buttonTransparan" textAlignment="CENTER">
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill></Button>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffd93e" height="320.0" layoutX="20.0" layoutY="125.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleKuningBR" width="240.0" />
+      <Text layoutX="28.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text1" text="Anda kekurangan makanan? Ayo pesan dan cari makanan berlebih yang layak dikonsumsi di sini " textAlignment="CENTER" wrappingWidth="224.6640625" />
+      <Text layoutX="288.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text1" text="Periksa pemberitahuan dari  makanan yang telah anda tawarkan dengan membuka menu Inbox " textAlignment="CENTER" wrappingWidth="224.6640625" />
+      <Text layoutX="548.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text1" text="Lihat jejak kebaikanmu! Dengan riwayat, temukan setiap makanan yang telah anda tawarkan" textAlignment="CENTER" wrappingWidth="224.6640625" />
+      <ImageView fitHeight="60.0" fitWidth="325.0" layoutX="20.0" layoutY="20.0">
+         <image>
+            <Image url="@../media/Logo%20Panjang.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="65.0" layoutY="135.0">
+         <image>
+            <Image url="@../media/Home1.png" />
+         </image>
+      </ImageView>
+      <ImageView layoutX="325.0" layoutY="135.0">
+         <image>
+            <Image url="@../media/Home2.png" />
+         </image>
+      </ImageView>
+      <ImageView layoutX="585.0" layoutY="135.0">
+         <image>
+            <Image url="@../media/Home3.png" />
+         </image>
+      </ImageView>
+      <Text layoutX="43.0" layoutY="491.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textPutih900" text="Memesan" textAlignment="CENTER" wrappingWidth="195.0" />
+      <Text layoutX="325.0" layoutY="492.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textPutih900" text="Inbox" textAlignment="CENTER" wrappingWidth="150.0" />
+      <Text layoutX="585.0" layoutY="492.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textPutih900" text="Riwayat" textAlignment="CENTER" wrappingWidth="150.0" />
+      <Button fx:id="keluar" layoutX="707.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleButtonKeluar" prefHeight="50.0" prefWidth="56.0" styleClass="buttonTransparan" />
+      <Button fx:id="pindah" layoutX="652.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleButtonPindah" prefHeight="50.0" prefWidth="56.0" styleClass="buttonTransparan" />
+      <ImageView layoutX="655.0" layoutY="25.0">
+         <image>
+            <Image url="@../media/Home4.png" />
+         </image>
+      </ImageView>
+      <ImageView layoutX="717.0" layoutY="25.0">
+         <image>
+            <Image url="@../media/Home5.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
