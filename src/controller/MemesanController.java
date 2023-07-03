@@ -109,10 +109,10 @@ public class MemesanController implements Initializable {
         String metodePengambilan = CBpengambilan.getValue();
 
         if (selectedMakanan != null) {
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan") || jumlahPesanan == 0) {
+            if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
                 // Implementasi logika untuk pesanan
                 showErrorAlert("Jumlah & Metode Pengambilan", "Harap tentukan jumlah pesanan dan pilih metode pengambilan terlebih dahulu.");
-            } else if (metodePengambilan.equals("Pilih Metode Pengambilan")) {
+            } else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
             } else if (jumlahPesanan == 0) {
                 showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
@@ -127,9 +127,9 @@ public class MemesanController implements Initializable {
                 updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
             }
         } else {
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan") || jumlahPesanan == 0) {
+            if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
                 showErrorAlert("Lengkapi Data Pemesanan", "Harap pilih makanan, jumlah pesanan, dan metode pengambilan terlebih dahulu.");
-            }else if (metodePengambilan.equals("Pilih Metode Pengambilan")) {
+            }else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
             } else if (jumlahPesanan == 0) {
                 showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
@@ -252,17 +252,7 @@ public class MemesanController implements Initializable {
         CBpengambilan.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Pilih Metode Pengambilan")) {
                 CBpengambilan.getSelectionModel().clearSelection();
-                // } else if (newValue.equals("Makanan Diantar")) {
-                //     // Tampilkan lokasi dari database DBregister di label
-                //     String username = getUsernameLoggedIn(); // Mendapatkan username yang sedang digunakan
-                //     String lokasiPengambilan = getLokasiPengambilan(username); // Mendapatkan lokasi pengambilan dari database DBregister berdasarkan username
-                //     Llokasi.setText(lokasiPengambilan);
-                // } else if (newValue.equals("Ambil Langsung")) {
-                //     // Tampilkan lokasi makanan dari database DBMakanan di label
-                //     String lokasiMakanan = getLokasiMakanan(); // Mendapatkan lokasi makanan dari database DBMakanan
-                //     Llokasi.setText(lokasiMakanan);
         } else {
-                // Lakukan tindakan lain sesuai pilihan pengguna
             }
         });
 
