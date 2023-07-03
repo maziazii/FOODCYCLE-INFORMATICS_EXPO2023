@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import database.DBConnection;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -84,6 +85,8 @@ public class MemesanController implements Initializable {
     
     private ObservableList<Makanan> makananList = FXCollections.observableArrayList();
     
+    private int jumlahPesanan = 0;
+
     @FXML
     private void handleButtonKembaliAction(ActionEvent event)  throws Exception{
         System.out.println("tes");
@@ -106,20 +109,79 @@ public class MemesanController implements Initializable {
         String metodePengambilan = CBpengambilan.getValue();
 
         if (selectedMakanan != null) {
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
+            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan") || jumlahPesanan == 0) {
                 // Implementasi logika untuk pesanan
-                showErrorAlert("Metode Pengambilan", "Harap pilih metode pengambilan terlebih dahulu.");
-            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan")){
+                showErrorAlert("Jumlah & Metode Pengambilan", "Harap tentukan jumlah pesanan dan pilih metode pengambilan terlebih dahulu.");
+            } else if (metodePengambilan.equals("Pilih Metode Pengambilan")) {
+                showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
+            } else if (jumlahPesanan == 0) {
+                showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
+            } else {
                 System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
+                // Lakukan aksi pengurangan jumlah pesanan dan update label jumlah pesanan
+                jumlahPesanan--;
+                LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+
+                // Lakukan aksi pengurangan jumlah makanan di database
+                int idMakanan = selectedMakanan.getIdMakanan();
+                updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
             }
-        } else if (selectedMakanan == null){
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
-                showErrorAlert("Pilih Makanan dan Metode Pengambilan", "Harap pilih makanan dan metode pengambilan terlebih dahulu.");
-            } else if (metodePengambilan != null && !metodePengambilan.equals("Pilih Metode Pengambilan")){
-                showErrorAlert("Pilih Makanan", "Harap pilih makanan terlebih dahulu.");
+        } else {
+            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan") || jumlahPesanan == 0) {
+                showErrorAlert("Lengkapi Data Pemesanan", "Harap pilih makanan, jumlah pesanan, dan metode pengambilan terlebih dahulu.");
+            }else if (metodePengambilan.equals("Pilih Metode Pengambilan")) {
+                showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
+            } else if (jumlahPesanan == 0) {
+                showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
             }
         }
+
     }
+
+    @FXML
+    private void handleButtonKurangAction(ActionEvent event) {
+        if (jumlahPesanan > 0) {
+            jumlahPesanan--;
+            LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+        } else {
+            showErrorAlert("Jumlah Pesanan", "Jumlah pesanan tidak bisa kurang dari nol.");
+        }
+    }
+
+    @FXML
+    private void handleButtonTambahAction(ActionEvent event) {
+        Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
+        if (selectedMakanan != null) {
+            int stokMakanan = selectedMakanan.getJumlahMakanan();
+            if (stokMakanan > 0) {
+                jumlahPesanan++;
+                LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+                stokMakanan--;
+                selectedMakanan.setJumlahMakanan(stokMakanan);
+                updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
+            } else {
+                showErrorAlert("Stok Makanan", "Stok makanan tidak mencukupi.");
+            }
+        } else {
+            showErrorAlert("Pilih Makanan", "Harap pilih makanan terlebih dahulu.");
+        }
+    }
+
+    private void updateJumlahMakanan(int idMakanan, int jumlahMakanan) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "UPDATE tbmakanan SET jumlahMakanan = ? WHERE idMakanan = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, jumlahMakanan);
+            statement.setInt(2, idMakanan);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Tampilkan alert kesalahan
+            showErrorAlert("Error", "Failed to update data in the database.");
+        }
+    }
+
     private void loadDataFromDatabase() {
         try {
             Connection connection = DBConnection.getConnection();
@@ -162,8 +224,6 @@ public class MemesanController implements Initializable {
         alert.showAndWait();
     }
 
-    
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -203,6 +263,17 @@ public class MemesanController implements Initializable {
                 //     Llokasi.setText(lokasiMakanan);
         } else {
                 // Lakukan tindakan lain sesuai pilihan pengguna
+            }
+        });
+
+        LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+
+        makananList.addListener((ListChangeListener<Makanan>) change -> {
+            while (change.next()) {
+                if (change.wasRemoved()) {
+                    TVMemesan.getItems().clear();
+                    TVMemesan.getItems().addAll(makananList);
+                }
             }
         });
     }

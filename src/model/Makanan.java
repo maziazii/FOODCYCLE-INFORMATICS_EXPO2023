@@ -40,4 +40,8 @@ public class Makanan {
     public String getTanggalKadaluwarsa() {
         return tanggalKadaluwarsa;
     }
+
+    public void setJumlahMakanan(int stokMakanan) {
+        this.jumlahMakanan = stokMakanan;
+    }
 }
