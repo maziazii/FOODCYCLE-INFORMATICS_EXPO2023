@@ -1,19 +1,7 @@
-## Getting Started
+Food Cycle
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Di bawah ini akan kita cantumkan cara menggunakan aplikasi foodcycle
 
-## Folder Structure
+notes : dikarenakan kita masih melakukan explore untuk mencari tahu cara menggunakan database mysql agar bisa diakses secara publik, maka dari itu untuk user yang bukan dari internal team untuk sekarang tidak bisa melakukan koneksi ke database dan hanya bisa mengakses tampilan halaman login register dan home
 
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
-# FOODCYCLE-INFORMATICS_EXPO2023
+Langkah langkah : 1. Download XAMPP 2. Nyalakan mysql dan apache 3. Lalu run mainnya 4. Run FoodCycle.java untuk mengakses tampilan login register 5. Run HomeKonsumen.java untuk mengakses tampilan home 6. Step berikutnya akan disampaikan lagi ketika project sudah jadi 100%
