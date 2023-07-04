@@ -23,6 +23,7 @@
       <TableView layoutX="20.0" layoutY="100.0" prefHeight="480.0" prefWidth="760.0">
         <columns>
           <TableColumn fx:id="TCidPemesanan" prefWidth="110.0" text="Id Pesan" />
+            <TableColumn fx:id="TCidPemesanan1" prefWidth="110.0" text="Tanggal" />
           <TableColumn fx:id="TCidMakanan" prefWidth="110.0" text="Id Makanan" />
             <TableColumn fx:id="TCnama" prefWidth="110.0" text="Nama" />
             <TableColumn fx:id="TCjumlah" prefWidth="110.0" text="Jumlah" />
