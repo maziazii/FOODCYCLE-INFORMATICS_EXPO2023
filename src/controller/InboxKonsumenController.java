@@ -15,6 +15,13 @@ import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
+ */
 public class InboxKonsumenController implements Initializable{
     
     @FXML

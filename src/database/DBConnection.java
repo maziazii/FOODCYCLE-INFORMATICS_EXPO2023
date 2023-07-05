@@ -4,6 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
+ */
 public class DBConnection {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/foodcycle";
     private static final String USERNAME = "root";
