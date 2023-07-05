@@ -107,11 +107,11 @@ public class MemesanController implements Initializable {
         return jumlahMakanan <= getSelectedMakanan().getJumlahMakanan();
     }
 
-    private boolean validateExpirationDate() {
-        LocalDate today = LocalDate.now();
-        LocalDate expirationDate = getSelectedMakanan().getTanggalKadaluwarsa();
-        return expirationDate.isAfter(today) || expirationDate.isEqual(today);
-    }
+    // private boolean validateExpirationDate() {
+    //     LocalDate today = LocalDate.now();
+    //     //LocalDate expirationDate = getSelectedMakanan().getTanggalKadaluwarsa();
+    //     return expirationDate.isAfter(today) || expirationDate.isEqual(today);
+    // }
 
 
     @FXML
@@ -141,10 +141,10 @@ public class MemesanController implements Initializable {
             return;
         }
 
-        if (!validateExpirationDate()) {
-            showErrorAlert("Error", "Makanan sudah kadaluwarsa.");
-            return;
-        }
+        // if (!validateExpirationDate()) {
+        //     showErrorAlert("Error", "Makanan sudah kadaluwarsa.");
+        //     return;
+        // }
         
         if (selectedMakanan != null) {
             if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
