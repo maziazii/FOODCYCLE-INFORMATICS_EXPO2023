@@ -49,6 +49,6 @@
             <Image url="@../media/Memesan2.png" />
          </image>
       </ImageView>
-      <DatePicker layoutX="20.0" layoutY="485.0" prefHeight="40.0" prefWidth="200.0" styleClass="date-picker" />
+      <DatePicker fx:id="DPtanggalPemesanan" layoutX="20.0" layoutY="485.0" prefHeight="40.0" prefWidth="200.0" styleClass="date-picker" />
    </children>
 </AnchorPane>

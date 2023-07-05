@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import database.DBConnection;
@@ -25,6 +26,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -52,6 +54,9 @@ public class MemesanController implements Initializable {
 
     @FXML
     private Label Llokasi;
+
+    @FXML
+    private DatePicker DPtanggalPemesanan;
 
     @FXML
     private TableColumn<Makanan, String> TCJenis;
@@ -90,6 +95,25 @@ public class MemesanController implements Initializable {
     
     private int jumlahPesanan = 0;
 
+    private boolean isDatePickerSelected() {
+        LocalDate selectedDate = DPtanggalPemesanan.getValue();
+        return selectedDate != null;
+    }
+    private Makanan getSelectedMakanan() {
+        return null;
+    }
+
+    private boolean validateQuantity(int jumlahMakanan) {
+        return jumlahMakanan <= getSelectedMakanan().getJumlahMakanan();
+    }
+
+    private boolean validateExpirationDate() {
+        LocalDate today = LocalDate.now();
+        LocalDate expirationDate = getSelectedMakanan().getTanggalKadaluwarsa();
+        return expirationDate.isAfter(today) || expirationDate.isEqual(today);
+    }
+
+
     @FXML
     private void handleButtonKembaliAction(ActionEvent event)  throws Exception{
         System.out.println("tes");
@@ -110,7 +134,18 @@ public class MemesanController implements Initializable {
     private void handleButtonPilihAction(ActionEvent event) throws Exception {
         Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
         String metodePengambilan = CBpengambilan.getValue();
+        int jumlahMakanan = Integer.parseInt(TCJumlah.getText());
 
+        if (!validateQuantity(jumlahMakanan)) {
+            showErrorAlert("Error", "Jumlah makanan yang disimpan melebihi stok yang tersedia.");
+            return;
+        }
+
+        if (!validateExpirationDate()) {
+            showErrorAlert("Error", "Makanan sudah kadaluwarsa.");
+            return;
+        }
+        
         if (selectedMakanan != null) {
             if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
                 // Implementasi logika untuk pesanan
@@ -120,14 +155,18 @@ public class MemesanController implements Initializable {
             } else if (jumlahPesanan == 0) {
                 showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
             } else {
-                System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
-                // Lakukan aksi pengurangan jumlah pesanan dan update label jumlah pesanan
-                jumlahPesanan--;
-                LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
-
-                // Lakukan aksi pengurangan jumlah makanan di database
-                int idMakanan = selectedMakanan.getIdMakanan();
-                updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
+                if (isDatePickerSelected()) {
+                    System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
+                    // Lakukan aksi pengurangan jumlah pesanan dan update label jumlah pesanan
+                    jumlahPesanan--;
+                    LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+    
+                    // Lakukan aksi pengurangan jumlah makanan di database
+                    int idMakanan = selectedMakanan.getIdMakanan();
+                    updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
+                } else {
+                    showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan terlebih dahulu.");
+                }
             }
         } else {
             if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
@@ -138,7 +177,6 @@ public class MemesanController implements Initializable {
                 showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
             }
         }
-
     }
 
     @FXML
@@ -157,11 +195,15 @@ public class MemesanController implements Initializable {
         if (selectedMakanan != null) {
             int stokMakanan = selectedMakanan.getJumlahMakanan();
             if (stokMakanan > 0) {
+                if (jumlahPesanan == 0) {
+                jumlahPesanan = 1;
+            } else {
                 jumlahPesanan++;
-                LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
-                stokMakanan--;
-                selectedMakanan.setJumlahMakanan(stokMakanan);
-                updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
+            }
+            LjumlahPesanan.setText (String.valueOf(jumlahPesanan));
+            stokMakanan--;
+            selectedMakanan.setJumlahMakanan(stokMakanan);
+            updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
             } else {
                 showErrorAlert("Stok Makanan", "Stok makanan tidak mencukupi.");
             }
@@ -227,6 +269,20 @@ public class MemesanController implements Initializable {
         alert.showAndWait();
     }
 
+    private void deleteMakananFromDatabase(int idMakanan) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "DELETE FROM tbmakanan WHERE idMakanan = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idMakanan);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Tampilkan alert kesalahan
+            showErrorAlert("Error", "Failed to delete data from the database.");
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -264,8 +320,11 @@ public class MemesanController implements Initializable {
         makananList.addListener((ListChangeListener<Makanan>) change -> {
             while (change.next()) {
                 if (change.wasRemoved()) {
-                    TVMemesan.getItems().clear();
-                    TVMemesan.getItems().addAll(makananList);
+                    for (Makanan removedMakanan : change.getRemoved()) {
+                        if (removedMakanan.getJumlahMakanan() <= 0) {
+                            deleteMakananFromDatabase(removedMakanan.getIdMakanan());
+                        }
+                    }
                 }
             }
         });
