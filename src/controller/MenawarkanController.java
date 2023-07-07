@@ -127,7 +127,7 @@ public class MenawarkanController implements Initializable {
     private void saveMakananToDatabase(Makanan makanan) {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "INSERT INTO tbmakanan (tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO tblmakanan (pengguna_id, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluarsa) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, makanan.getTanggalPenawaran());
             statement.setString(2, makanan.getNamaMakanan());

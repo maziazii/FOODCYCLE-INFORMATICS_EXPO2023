@@ -23,7 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Registrasi;
+import model.Pengguna;
 
 /**
  *
@@ -87,8 +87,8 @@ public class RegisterController implements Initializable {
             return; 
         }
 
-        Registrasi registrasi = new Registrasi(nama, alamat, username, "", noTelepon, password); // Perhatikan perubahan di sini
-        saveRegistrasi(registrasi);
+        Pengguna pengguna = new Pengguna("", nama, alamat, username, "", noTelepon, password); // Perhatikan perubahan di sini
+        savePengguna(pengguna);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
         Stage stage = new Stage();
@@ -121,7 +121,7 @@ public class RegisterController implements Initializable {
 
     private boolean usernameAlreadyExists(String username) {
         try {
-            String query = "SELECT COUNT(*) FROM tbregistrasi WHERE username = ?";
+            String query = "SELECT COUNT(*) FROM tblpengguna WHERE username = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -136,16 +136,16 @@ public class RegisterController implements Initializable {
         return false;
     }
 
-    private void saveRegistrasi(Registrasi registrasi) {
+    private void savePengguna(Pengguna pengguna) {
         try {
-            String sql = "INSERT INTO tbregistrasi (nama, alamat, noTelepon, username, password, peran) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO tblpengguna (nama, alamat, noTelepon, username, password, peran) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, registrasi.getNama());
-            statement.setString(2, registrasi.getAlamat());
-            statement.setString(3, registrasi.getnoTelepon());
-            statement.setString(4, registrasi.getUsername());
-            statement.setString(5, registrasi.getPassword());
-            statement.setString(6, registrasi.getPeran()); // Perhatikan perubahan di sini
+            statement.setString(1, pengguna.getNama());
+            statement.setString(2, pengguna.getAlamat());
+            statement.setString(3, pengguna.getnoTelepon());
+            statement.setString(4, pengguna.getUsername());
+            statement.setString(5, pengguna.getPassword());
+            statement.setString(6, pengguna.getPeran()); // Perhatikan perubahan di sini
 
             statement.executeUpdate();
 

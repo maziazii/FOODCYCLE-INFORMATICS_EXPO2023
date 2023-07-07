@@ -123,8 +123,8 @@ public class MemesanController implements Initializable {
                 LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
 
                 // Lakukan aksi pengurangan jumlah makanan di database
-                int idMakanan = selectedMakanan.getIdMakanan();
-                updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
+                int makanan_id = selectedMakanan.getMakanan_id();
+                updateJumlahMakanan(makanan_id, selectedMakanan.getJumlahMakanan() - 1);
             }
         } else {
             if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan") || jumlahPesanan == 0) {
@@ -158,7 +158,7 @@ public class MemesanController implements Initializable {
                 LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
                 stokMakanan--;
                 selectedMakanan.setJumlahMakanan(stokMakanan);
-                updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
+                updateJumlahMakanan(selectedMakanan.getMakanan_id(), stokMakanan);
             } else {
                 showErrorAlert("Stok Makanan", "Stok makanan tidak mencukupi.");
             }
@@ -167,13 +167,13 @@ public class MemesanController implements Initializable {
         }
     }
 
-    private void updateJumlahMakanan(int idMakanan, int jumlahMakanan) {
+    private void updateJumlahMakanan(int makanan_id, int jumlahMakanan) {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "UPDATE tbmakanan SET jumlahMakanan = ? WHERE idMakanan = ?";
+            String query = "UPDATE tblmakanan SET jumlahMakanan = ? WHERE makanan_id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, jumlahMakanan);
-            statement.setInt(2, idMakanan);
+            statement.setInt(2, makanan_id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -185,12 +185,12 @@ public class MemesanController implements Initializable {
     private void loadDataFromDatabase() {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM tbmakanan";
+            String query = "SELECT * FROM tblmakanan";
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                int idMakanan = resultSet.getInt("idMakanan");
+                int makanan_id = resultSet.getInt("makanan_id");
                 String tanggalPenawaran = resultSet.getString("tanggalPenawaran");
                 String namaMakanan = resultSet.getString("namaMakanan");
                 int jumlahMakanan = resultSet.getInt("jumlahMakanan");
@@ -198,7 +198,7 @@ public class MemesanController implements Initializable {
                 String jenisMakanan = resultSet.getString("jenisMakanan");
                 String tanggalKadaluwarsa = resultSet.getString("tanggalKadaluwarsa");
 
-                Makanan makanan = new Makanan(idMakanan, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa);
+                Makanan makanan = new Makanan(makanan_id, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa);
                 makananList.add(makanan);
             }
         } catch (SQLException e) {

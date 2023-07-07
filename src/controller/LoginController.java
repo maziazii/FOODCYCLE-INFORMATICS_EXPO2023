@@ -107,7 +107,7 @@ public class LoginController implements Initializable {
 
     private boolean login(String username, String password) {
         try {
-            String query = "SELECT COUNT(*) FROM tbregistrasi WHERE username = ? AND password = ?";
+            String query = "SELECT COUNT(*) FROM tblpengguna WHERE username = ? AND password = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
             statement.setString(2, password);
@@ -159,7 +159,7 @@ public class LoginController implements Initializable {
         });
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/foodcycle", "root", ""); // Sesuaikan dengan informasi koneksi Anda
+            connection = DriverManager.getConnection("jdbc:mysql://aws.connect.psdb.cloud/dbfoodcycle?sslMode=VERIFY_IDENTITY", "dqm8fgh0fqjdpltcmlz0", "pscale_pw_2fbpBlyeZQ2HQzP6lt1AfIE1T4cI1H4ZesKek2cm8PG"); // Sesuaikan dengan informasi koneksi Anda
         } catch (SQLException e) {
             e.printStackTrace();
         }
