@@ -176,7 +176,7 @@ public class MenawarkanController implements Initializable {
                 e.printStackTrace();
             }
             } else if (result.get() == penawaranBaruButton) {
-                // Reset data input dan status penawaran
+                // Reset data input dan status penawaran.
                 resetForm();
                 isPenawaranDilakukan = false;
             }
