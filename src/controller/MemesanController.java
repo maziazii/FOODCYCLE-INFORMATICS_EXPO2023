@@ -172,12 +172,9 @@ public class MemesanController implements Initializable {
                     saveDataToDatabase(pemesanan);
                     showSuccessAlert();
 
-                    if (jumlahPesanan == 0) {
-                        if (selectedMakanan != null) {
-                            makananList.remove(selectedMakanan);
-                            deleteMakananFromDatabase(selectedMakanan.getIdMakanan());
-                        }
-                    }
+
+
+
                 }
             }
         } else {
@@ -196,7 +193,7 @@ public class MemesanController implements Initializable {
         if (jumlahPesanan > 0) {
             jumlahPesanan--;
             LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
-        } else {
+        }else{
             showErrorAlert("Jumlah Pesanan", "Jumlah pesanan tidak bisa kurang dari nol.");
         }
     }
@@ -222,26 +219,29 @@ public class MemesanController implements Initializable {
         } else {
             showErrorAlert("Pilih Makanan", "Harap pilih makanan terlebih dahulu.");
         }
+        TVMemesan.refresh();
     }
-
+    
     private void updateJumlahMakanan(int idMakanan, int jumlahMakanan) {
-        if (jumlahMakanan <= 0) {
+        if (jumlahMakanan == 0) {
             Makanan selectedMakanan = getSelectedMakanan();
             if (selectedMakanan != null) {
+                // Menghapus makanan dari tabel
                 makananList.remove(selectedMakanan);
-                deleteMakananFromDatabase(selectedMakanan.getIdMakanan());
             }
-        }
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "UPDATE tbmakanan SET jumlahMakanan = ? WHERE idMakanan = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, jumlahMakanan);
-            statement.setInt(2, idMakanan);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showErrorAlert("Error", "Failed to update data in the database.");
+            deleteMakananFromDatabase(idMakanan);
+        } else {
+            try {
+                Connection connection = DBConnection.getConnection();
+                String query = "UPDATE tbmakanan SET jumlahMakanan = ? WHERE idMakanan = ?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setInt(1, jumlahMakanan);
+                statement.setInt(2, idMakanan);
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showErrorAlert("Error", "Failed to update data in the database.");
+            }
         }
     }
 
@@ -332,10 +332,14 @@ public class MemesanController implements Initializable {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, idMakanan);
             statement.executeUpdate();
+            statement.close();
+            makananList.removeIf(makanan -> makanan.getIdMakanan() == idMakanan);
+            // Print a success message if the deletion is successful
+            System.out.println("Data successfully deleted from the database.");
         } catch (SQLException e) {
             e.printStackTrace();
-            // Tampilkan alert kesalahan
-            showErrorAlert("Error", "Gagal menghapus data dari database.");
+            // Show error alert
+            showErrorAlert("Error", "Failed to delete data from the database.");
         }
     }
 
