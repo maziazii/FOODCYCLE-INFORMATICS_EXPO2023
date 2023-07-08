@@ -37,6 +37,7 @@ import javafx.stage.Stage;
 import model.Makanan;
 import model.Session;
 import model.Pemesanan;
+import java.time.LocalDate;
 
 /**
  * @author LEMTIKOM
@@ -109,7 +110,7 @@ public class MemesanController implements Initializable {
         return jumlahMakanan <= getSelectedMakanan().getJumlahMakanan();
     }
 
-    private String getAlamatPengguna(String username) {
+    private String getAlamatPenggunaFromDatabase(String username) {
         String alamatPengguna = "";
         try {
             Connection connection = DBConnection.getConnection();
@@ -141,7 +142,7 @@ public class MemesanController implements Initializable {
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
         dialogStage.showAndWait();
-        Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
+        Stage currentStage = (Stage)((Node)(event.getSource())).getScene().getWindow();
         currentStage.close();
     }
     
@@ -162,16 +163,17 @@ public class MemesanController implements Initializable {
                 if (!isDatePickerSelected()) {
                     showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan terlebih dahulu.");
                 } else {
-                    Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText());
+                    LocalDate selectedDate = DPtanggalPemesanan.getValue();
+                    LocalDate currentDate = LocalDate.now();
 
-                    saveDataToDatabase(pemesanan);
-                    showSuccessAlert();
+                    if (selectedDate.isAfter(currentDate)) {
+                        Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText());
 
-                    System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
-                    jumlahPesanan--;
-                    LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
-                    int idMakanan = selectedMakanan.getIdMakanan();
-                    updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
+                        saveDataToDatabase(pemesanan);
+                        showSuccessAlert();
+                    } else {
+                        showErrorAlert("Tanggal Kadaluwarsa", "Makanan sudah kadaluwarsa. Pilih makanan yang belum memasuki tanggal kadaluwarsa.");
+                    }
                 }
             }
         } else {
@@ -228,7 +230,6 @@ public class MemesanController implements Initializable {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Tampilkan alert kesalahan
             showErrorAlert("Error", "Failed to update data in the database.");
         }
     }
@@ -254,7 +255,6 @@ public class MemesanController implements Initializable {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Tampilkan alert kesalahan
             showErrorAlert("Error", "Failed to load data from database.");
         }
     }
@@ -335,7 +335,7 @@ public class MemesanController implements Initializable {
         CBpengambilan.getSelectionModel().clearSelection();
     }
 
-    private int getIdPenggunaFromDatabase(String username) {
+    private int getIdPengguna(String username) {
         int idPengguna = 0;
         try {
             Connection connection = DBConnection.getConnection();
@@ -358,38 +358,36 @@ public class MemesanController implements Initializable {
     }
 
     private void saveDataToDatabase(Pemesanan pemesanan) {
-        String username = Session.getLoggedInUsername();
-        int idPengguna = getIdPenggunaFromDatabase(username);
+        try {
+            Connection connection = DBConnection.getConnection();
+            String querry = "INSERT INTO tbpemesanan (idPengguna, idMakanan, tanggalPemesanan, namaMakanan, jumlahPemesanan, metodePengambilan, lokasiMetode) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(querry);
 
-        if (idPengguna != 0) {
-            try {
-                Connection connection = DBConnection.getConnection();
-                String query = "INSERT INTO tbpemesanan (id_Pengguna, id_Makanan, tangggalPemesanan, namaMakanan, jumlahPemesanan, metodePengambilan, lokasiMetode) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-                PreparedStatement statement = connection.prepareStatement(query);
-
-                statement.setInt(1, idPengguna);
-                statement.setInt(2, pemesanan.getIdMakanan());
-                statement.setString(3, pemesanan.getTanggalPemesanan());
-                statement.setString(4, pemesanan.getNamaMakanan());
-                statement.setInt(5, pemesanan.getJumlahPemesanan());
-                statement.setString(6, pemesanan.getMetodePengambilan());
-                statement.setString(7, pemesanan.getLokasiMetode());
-                statement.executeUpdate();
-
-                showSuccessAlert();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                showErrorAlert("Error", "Failed to save data to the database.");
-            }
-        } else {
-            showErrorAlert("Error", "Failed to retrieve user ID.");
+            String username = Session.getLoggedInUsername();
+            int idPengguna = getIdPengguna(username);
+    
+            statement.setInt(1, idPengguna);
+            statement.setInt(2, pemesanan.getIdMakanan());
+            statement.setString(3, pemesanan.getTanggalPemesanan());
+            statement.setString(4, pemesanan.getNamaMakanan());
+            statement.setInt(5, pemesanan.getJumlahPemesanan());
+            statement.setString(6, pemesanan.getMetodePengambilan());
+            statement.setString(7, pemesanan.getLokasiMetode());
+            statement.executeUpdate();
+    } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "Failed to save data to the database.");
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        Object connection = DBConnection.getConnection();
+        if (connection == null) {
+            showErrorAlert("Connection", "Gagal terhubbung ke database!");
+        }
+
         TCTanggal.setCellValueFactory(new PropertyValueFactory<>("tanggalPenawaran"));
         TCNama.setCellValueFactory(new PropertyValueFactory<>("namaMakanan"));
         TCJumlah.setCellValueFactory(new PropertyValueFactory<>("jumlahMakanan"));
@@ -400,7 +398,6 @@ public class MemesanController implements Initializable {
         // Mengatur ObservableList sebagai data sumber TableView
         TVMemesan.setItems(makananList);
 
-        // Panggil metode untuk mengambil data dari database dan menambahkannya ke makananList
         loadDataFromDatabase();
 
         ObservableList<String> options = FXCollections.observableArrayList(
@@ -418,7 +415,7 @@ public class MemesanController implements Initializable {
                 Llokasi.setText("");
             } else if (newValue.equals("Makanan Diantar")) {
                 String username = Session.getLoggedInUsername();
-                String alamatPengguna = getAlamatPengguna(username);
+                String alamatPengguna = getAlamatPenggunaFromDatabase(username);
                 Llokasi.setText(alamatPengguna);
             } else if (newValue.equals("Ambil Langsung")) {
                 Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();

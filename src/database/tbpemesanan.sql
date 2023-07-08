@@ -31,7 +31,7 @@ CREATE TABLE `tbpemesanan` (
   `idPengguna` int(255) NOT NULL,
   `idMakanan` int(255) NOT NULL,
   `idPemesanan` int(225) NOT NULL,
-  `tangggalPemesanan` varchar(225) NOT NULL,
+  `tanggalPemesanan` varchar(225) NOT NULL,
   `namaMakanan` varchar(225) NOT NULL,
   `jumlahPemesanan` int(225) NOT NULL,
   `metodePengambilan` varchar(225) NOT NULL,
