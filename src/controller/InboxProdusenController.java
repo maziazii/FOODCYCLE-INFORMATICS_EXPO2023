@@ -17,6 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Pemesanan;
 /**
  * @author LEMTIKOM
  * Muhamad Azis - 22523289
@@ -30,28 +31,28 @@ public class InboxProdusenController implements Initializable {
     private ChoiceBox<String> CBstatus;
 
     @FXML
-    private TableColumn<?, ?> TCidMakanan;
+    private TableColumn<Pemesanan, Integer> TCidMakanan;
 
     @FXML
-    private TableColumn<?, ?> TCidPemesanan;
+    private TableColumn<Pemesanan, Integer> TCidPemesanan;
 
     @FXML
-    private TableColumn<?, ?> TCjumlah;
+    private TableColumn<Pemesanan, Integer> TCjumlah;
 
     @FXML
-    private TableColumn<?, ?> TClokasi;
+    private TableColumn<Pemesanan, String> TClokasi;
 
     @FXML
-    private TableColumn<?, ?> TCnama;
+    private TableColumn<Pemesanan, String> TCnama;
 
     @FXML
-    private TableColumn<?, ?> TCpengambilan;
+    private TableColumn<Pemesanan, String> TCpengambilan;
 
     @FXML
-    private TableColumn<?, ?> TCstatus;
+    private TableColumn<Pemesanan, String> TCstatus;
 
     @FXML
-    private TableView<?> TVinbox;
+    private TableView<Pemesanan> TVinbox;
 
     @FXML
     private Button kembali;

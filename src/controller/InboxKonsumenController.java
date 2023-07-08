@@ -14,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Pemesanan;
 
 /**
  * @author LEMTIKOM
@@ -25,28 +26,28 @@ import javafx.stage.Stage;
 public class InboxKonsumenController implements Initializable{
     
     @FXML
-    private TableColumn<?, ?> TCidMakanan;
+    private TableColumn<Pemesanan, Integer> TCidMakanan;
 
     @FXML
-    private TableColumn<?, ?> TCidPemesanan;
+    private TableColumn<Pemesanan, Integer> TCidPemesanan;
 
     @FXML
-    private TableColumn<?, ?> TCjumlah;
+    private TableColumn<Pemesanan, Integer> TCjumlah;
 
     @FXML
-    private TableColumn<?, ?> TClokasi;
+    private TableColumn<Pemesanan, String> TClokasi;
 
     @FXML
-    private TableColumn<?, ?> TCnama;
+    private TableColumn<Pemesanan, String> TCnama;
 
     @FXML
-    private TableColumn<?, ?> TCpengambilan;
+    private TableColumn<Pemesanan, String> TCpengambilan;
 
     @FXML
-    private TableColumn<?, ?> TCstatus;
+    private TableColumn<Pemesanan, String> TCstatus;
 
     @FXML
-    private TableView<?> TVriwayat;
+    private TableView<Pemesanan> TVriwayat;
 
     @FXML
     private Button kemballi;

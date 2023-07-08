@@ -152,8 +152,12 @@ public class MemesanController implements Initializable {
         String metodePengambilan = CBpengambilan.getValue();
 
         if (selectedMakanan != null) {
-            // Mendapatkan jumlah makanan dari objek Makanan terpilih
-            if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
+            LocalDate today = LocalDate.now();
+            LocalDate tanggalKadaluwarsa = LocalDate.parse(selectedMakanan.getTanggalKadaluwarsa());
+            if (tanggalKadaluwarsa.isBefore(today)) {
+                showErrorAlert("Tanggal Kadaluwarsa", "Makanan yang dipilih sudah kadaluwarsa.");
+                return;
+            } if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
                 showErrorAlert("Jumlah & Metode Pengambilan", "Harap tentukan jumlah pesanan dan pilih metode pengambilan terlebih dahulu.");
             } else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
@@ -163,16 +167,16 @@ public class MemesanController implements Initializable {
                 if (!isDatePickerSelected()) {
                     showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan terlebih dahulu.");
                 } else {
-                    LocalDate selectedDate = DPtanggalPemesanan.getValue();
-                    LocalDate currentDate = LocalDate.now();
+                    Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText());
 
-                    if (selectedDate.isAfter(currentDate)) {
-                        Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText());
+                    saveDataToDatabase(pemesanan);
+                    showSuccessAlert();
 
-                        saveDataToDatabase(pemesanan);
-                        showSuccessAlert();
-                    } else {
-                        showErrorAlert("Tanggal Kadaluwarsa", "Makanan sudah kadaluwarsa. Pilih makanan yang belum memasuki tanggal kadaluwarsa.");
+                    if (jumlahPesanan == 0) {
+                        if (selectedMakanan != null) {
+                            makananList.remove(selectedMakanan);
+                            deleteMakananFromDatabase(selectedMakanan.getIdMakanan());
+                        }
                     }
                 }
             }
@@ -221,6 +225,13 @@ public class MemesanController implements Initializable {
     }
 
     private void updateJumlahMakanan(int idMakanan, int jumlahMakanan) {
+        if (jumlahMakanan <= 0) {
+            Makanan selectedMakanan = getSelectedMakanan();
+            if (selectedMakanan != null) {
+                makananList.remove(selectedMakanan);
+                deleteMakananFromDatabase(selectedMakanan.getIdMakanan());
+            }
+        }
         try {
             Connection connection = DBConnection.getConnection();
             String query = "UPDATE tbmakanan SET jumlahMakanan = ? WHERE idMakanan = ?";
@@ -324,7 +335,7 @@ public class MemesanController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             // Tampilkan alert kesalahan
-            showErrorAlert("Error", "Failed to delete data from the database.");
+            showErrorAlert("Error", "Gagal menghapus data dari database.");
         }
     }
 
@@ -374,7 +385,7 @@ public class MemesanController implements Initializable {
             statement.setString(6, pemesanan.getMetodePengambilan());
             statement.setString(7, pemesanan.getLokasiMetode());
             statement.executeUpdate();
-    } catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             showErrorAlert("Error", "Failed to save data to the database.");
         }
@@ -382,10 +393,11 @@ public class MemesanController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        makananList = FXCollections.observableArrayList();
         // TODO
         Object connection = DBConnection.getConnection();
         if (connection == null) {
-            showErrorAlert("Connection", "Gagal terhubbung ke database!");
+            showErrorAlert("Connection", "Gagal terhubung ke database!");
         }
 
         TCTanggal.setCellValueFactory(new PropertyValueFactory<>("tanggalPenawaran"));
@@ -399,7 +411,7 @@ public class MemesanController implements Initializable {
         TVMemesan.setItems(makananList);
 
         loadDataFromDatabase();
-
+        
         ObservableList<String> options = FXCollections.observableArrayList(
             "Pilih Metode Pengambilan",
             "Makanan Diantar",

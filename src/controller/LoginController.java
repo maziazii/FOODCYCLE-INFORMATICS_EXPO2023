@@ -1,6 +1,6 @@
 package controller;
 
-import model.Session;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -30,6 +30,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.Session;
 
 
 /**
