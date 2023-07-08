@@ -1,15 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
- */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import database.DBConnection;
@@ -25,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
@@ -36,6 +35,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Makanan;
+import model.Session;
+import model.Pemesanan;
 
 /**
  * @author LEMTIKOM
@@ -99,6 +100,7 @@ public class MemesanController implements Initializable {
         LocalDate selectedDate = DPtanggalPemesanan.getValue();
         return selectedDate != null;
     }
+
     private Makanan getSelectedMakanan() {
         return null;
     }
@@ -107,11 +109,32 @@ public class MemesanController implements Initializable {
         return jumlahMakanan <= getSelectedMakanan().getJumlahMakanan();
     }
 
+    private String getAlamatPengguna(String username) {
+        String alamatPengguna = "";
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT alamat FROM tbregistrasi WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                alamatPengguna = resultSet.getString(1);
+            } else {
+                showErrorAlert("Pencarian Username", "Username tidak ditemukan!");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Pencarian Alamat Pengguna", "Terjadi kesalahan dalam mendapatkan alamat pengguna!");
+        }
+        return alamatPengguna;
+    }
+
     @FXML
     private void handleButtonKembaliAction(ActionEvent event)  throws Exception{
         System.out.println("tes");
-        FXMLLoader loader = new FXMLLoader(); 
-        loader.setLocation(HomeKonsumenController.class.getResource("/view/HomeKonsumen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeKonsumen.fxml"));
         Stage dialogStage = new Stage(); 
         dialogStage.setTitle("testing");
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
@@ -139,12 +162,14 @@ public class MemesanController implements Initializable {
                 if (!isDatePickerSelected()) {
                     showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan terlebih dahulu.");
                 } else {
+                    Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText());
+
+                    saveDataToDatabase(pemesanan);
+                    showSuccessAlert();
+
                     System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
-                    // Lakukan aksi pengurangan jumlah pesanan dan update label jumlah pesanan
                     jumlahPesanan--;
                     LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
-        
-                    // Lakukan aksi pengurangan jumlah makanan di database
                     int idMakanan = selectedMakanan.getIdMakanan();
                     updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
                 }
@@ -152,7 +177,7 @@ public class MemesanController implements Initializable {
         } else {
             if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
                 showErrorAlert("Lengkapi Data Pemesanan", "Harap pilih makanan, jumlah pesanan, dan metode pengambilan terlebih dahulu.");
-            }else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
+            } else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
             } else if (jumlahPesanan == 0) {
                 showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
@@ -250,6 +275,45 @@ public class MemesanController implements Initializable {
         alert.showAndWait();
     }
 
+    private void showSuccessAlert() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Pesanan Berhasil Terkirim");
+        alert.setHeaderText(null);
+        alert.setContentText("Data pemesanan berhasil dikirim. Apakah anda akan melakukan pemesanan baru?");
+        
+        ButtonType okButton = new ButtonType("TIDAK");
+        ButtonType penawaranBaruButton = new ButtonType("Pemesanan Baru");
+
+        alert.getButtonTypes().setAll(okButton, penawaranBaruButton);
+
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResource("/media/checklist.png").toString()));
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/CSSFoodCycle.css").toExternalForm());
+        dialogPane.getStyleClass().add("alert-success");
+        
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent()) {
+            if (result.get() == okButton) {
+                // Lakukan tindakan jika OK dipilih (misalnya menutup dialog)
+                alert.close();
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeKonsumen.fxml"));
+                    Stage homeKonsumenStage = new Stage();
+                    homeKonsumenStage.setTitle("Home Konsumen");
+                    homeKonsumenStage.setScene(new Scene(loader.load()));
+                    homeKonsumenStage.initModality(Modality.APPLICATION_MODAL);
+                    homeKonsumenStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (result.get() == penawaranBaruButton) {
+                resetForm();
+            }
+        }
+    }
+
     private void deleteMakananFromDatabase(int idMakanan) {
         try {
             Connection connection = DBConnection.getConnection();
@@ -261,6 +325,65 @@ public class MemesanController implements Initializable {
             e.printStackTrace();
             // Tampilkan alert kesalahan
             showErrorAlert("Error", "Failed to delete data from the database.");
+        }
+    }
+
+    private void resetForm() {
+        DPtanggalPemesanan.setValue(null);
+        LjumlahPesanan.setText("0");
+        Llokasi.setText("");
+        CBpengambilan.getSelectionModel().clearSelection();
+    }
+
+    private int getIdPenggunaFromDatabase(String username) {
+        int idPengguna = 0;
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT idPengguna FROM tbregistrasi WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                idPengguna = resultSet.getInt(1);
+            } else {
+                showErrorAlert("Pencarian Username", "Username tidak ditemukan!");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Pencarian id Pengguna", "Terjadi kesalahan dalam mendapatkan idPengguna!");
+        }
+        return idPengguna;
+    }
+
+    private void saveDataToDatabase(Pemesanan pemesanan) {
+        String username = Session.getLoggedInUsername();
+        int idPengguna = getIdPenggunaFromDatabase(username);
+
+        if (idPengguna != 0) {
+            try {
+                Connection connection = DBConnection.getConnection();
+                String query = "INSERT INTO tbpemesanan (id_Pengguna, id_Makanan, tangggalPemesanan, namaMakanan, jumlahPemesanan, metodePengambilan, lokasiMetode) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement statement = connection.prepareStatement(query);
+
+                statement.setInt(1, idPengguna);
+                statement.setInt(2, pemesanan.getIdMakanan());
+                statement.setString(3, pemesanan.getTanggalPemesanan());
+                statement.setString(4, pemesanan.getNamaMakanan());
+                statement.setInt(5, pemesanan.getJumlahPemesanan());
+                statement.setString(6, pemesanan.getMetodePengambilan());
+                statement.setString(7, pemesanan.getLokasiMetode());
+                statement.executeUpdate();
+
+                showSuccessAlert();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showErrorAlert("Error", "Failed to save data to the database.");
+            }
+        } else {
+            showErrorAlert("Error", "Failed to retrieve user ID.");
         }
     }
 
@@ -292,13 +415,15 @@ public class MemesanController implements Initializable {
         CBpengambilan.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Pilih Metode Pengambilan")) {
                 CBpengambilan.getSelectionModel().clearSelection();
+                Llokasi.setText("");
             } else if (newValue.equals("Makanan Diantar")) {
-                String alamatPengguna = DBConnection.getAlamatPengguna();
+                String username = Session.getLoggedInUsername();
+                String alamatPengguna = getAlamatPengguna(username);
                 Llokasi.setText(alamatPengguna);
             } else if (newValue.equals("Ambil Langsung")) {
                 Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
                 if (selectedMakanan != null) {
-                    String lokasiPengambilan = DBConnection.getLokasiPengambilan(selectedMakanan.getIdMakanan());
+                    String lokasiPengambilan = selectedMakanan.getLokasiPengambilan();
                     Llokasi.setText(lokasiPengambilan);
                 } else {
                     Llokasi.setText("");

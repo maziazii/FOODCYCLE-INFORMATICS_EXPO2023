@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 05, 2023 at 05:33 PM
+-- Generation Time: Jul 08, 2023 at 07:30 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `dbregister`
+-- Database: `foodcycle`
 --
 
 -- --------------------------------------------------------
@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `tbpemesanan` (
-  `id_Pengguna` int(225) NOT NULL,
-  `id_Makanan` int(225) NOT NULL,
+  `idPengguna` int(255) NOT NULL,
+  `idMakanan` int(255) NOT NULL,
   `idPemesanan` int(225) NOT NULL,
   `tangggalPemesanan` varchar(225) NOT NULL,
   `namaMakanan` varchar(225) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE `tbpemesanan` (
 -- Indexes for table `tbpemesanan`
 --
 ALTER TABLE `tbpemesanan`
-  ADD PRIMARY KEY (`id_Makanan`);
+  ADD PRIMARY KEY (`idPemesanan`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -56,7 +56,7 @@ ALTER TABLE `tbpemesanan`
 -- AUTO_INCREMENT for table `tbpemesanan`
 --
 ALTER TABLE `tbpemesanan`
-  MODIFY `id_Makanan` int(225) NOT NULL AUTO_INCREMENT;
+  MODIFY `idPemesanan` int(225) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

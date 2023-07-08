@@ -48,41 +48,45 @@ public class DBConnection {
     }
 
     // public static String getAlamatPengguna() {
-    //     String alamatPengguna = null;
-
+    //     String alamat = "";
     //     try {
-    //         Connection connection = DBConnection.getConnection();
-    //         String query = "SELECT alamat FROM tbregistrasi WHERE idPengguna = ?";
+    //         String username = Session.getLoggedInUsername(); // Mendapatkan username dari Session
+    //         Connection connection = getConnection();
+    //         String query = "SELECT alamat FROM tbpengguna WHERE idPengguna = ?";
     //         PreparedStatement statement = connection.prepareStatement(query);
-    //         statement.setInt(1, username); // Gantikan dengan metode yang sesuai untuk mendapatkan ID pengguna saat ini
+    //         // Ganti 1 dengan idPengguna yang sesuai
+    //         statement.setInt(1, 1);
     //         ResultSet resultSet = statement.executeQuery();
     //         if (resultSet.next()) {
-    //             alamatPengguna = resultSet.getString(1);
+    //             alamat = resultSet.getString("alamat");
     //         } else {
-    //             showErrorAlert("Lokasi", "Alamat pengguna tidak ditemukan!");
+    //             System.out.println("Alamat pengguna tidak ditemukan!");
+    //         }
+    //         statement.close();
+    //         resultSet.close();
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //         System.out.println("Terjadi kesalahan dalam mendapatkan alamat pengguna!");
+    //     }
+    //     return alamat;
+    // }
+
+    // public static String getLokasiPengambilan(int idMakanan) {
+    //     String lokasiPengambilan = null;
+
+    //     try (Connection connection = getConnection()) {
+    //         String query = "SELECT lokasiPengambilan FROM tbmakanan WHERE idMakanan = ?";
+    //         PreparedStatement statement = connection.prepareStatement(query);
+    //         statement.setInt(1, idMakanan);
+    //         ResultSet resultSet = statement.executeQuery();
+
+    //         if (resultSet.next()) {
+    //             lokasiPengambilan = resultSet.getString("lokasiPengambilan");
     //         }
     //     } catch (SQLException e) {
     //         e.printStackTrace();
     //     }
-    //     return alamatPengguna;
+
+    //     return lokasiPengambilan;
     // }
-
-    public static String getLokasiPengambilan(int idMakanan) {
-        String lokasiPengambilan = null;
-
-        try (Connection connection = getConnection()) {
-            String query = "SELECT lokasiPengambilan FROM tbmakanan WHERE idMakanan = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, idMakanan);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                lokasiPengambilan = resultSet.getString("lokasiPengambilan");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return lokasiPengambilan;
-    }
 }
