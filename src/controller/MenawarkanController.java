@@ -197,15 +197,15 @@ public class MenawarkanController implements Initializable {
                 // Lakukan tindakan jika OK dipilih (misalnya menutup dialog)
                 alert.close();
                 try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeProdusen.fxml"));
-                Stage homeProdusenStage = new Stage();
-                homeProdusenStage.setTitle("Home Produsen");
-                homeProdusenStage.setScene(new Scene(loader.load()));
-                homeProdusenStage.initModality(Modality.APPLICATION_MODAL);
-                homeProdusenStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeProdusen.fxml"));
+                    Stage homeProdusenStage = new Stage();
+                    homeProdusenStage.setTitle("Home Produsen");
+                    homeProdusenStage.setScene(new Scene(loader.load()));
+                    homeProdusenStage.initModality(Modality.APPLICATION_MODAL);
+                    homeProdusenStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if (result.get() == penawaranBaruButton) {
                 // Reset data input dan status penawaran
                 resetForm();
@@ -231,7 +231,6 @@ public class MenawarkanController implements Initializable {
     }
 
     private void resetForm() {
-        // Reset semua input form ke nilai awal
         DPPenawaran.setValue(null);
         TFNamaMakanan.clear();
         TFJumlahMakanan.clear();

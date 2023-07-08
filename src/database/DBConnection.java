@@ -47,24 +47,25 @@ public class DBConnection {
         }
     }
 
-    public static String getAlamatPengguna() {
-        String alamatPengguna = null;
+    // public static String getAlamatPengguna() {
+    //     String alamatPengguna = null;
 
-        try (Connection connection = getConnection()) {
-            String query = "SELECT alamat FROM tbregistrasi WHERE idPengguna = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, Session.getUserId()); // Gantikan dengan metode yang sesuai untuk mendapatkan ID pengguna saat ini
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                alamatPengguna = resultSet.getString("alamat");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return alamatPengguna;
-    }
+    //     try {
+    //         Connection connection = DBConnection.getConnection();
+    //         String query = "SELECT alamat FROM tbregistrasi WHERE idPengguna = ?";
+    //         PreparedStatement statement = connection.prepareStatement(query);
+    //         statement.setInt(1, username); // Gantikan dengan metode yang sesuai untuk mendapatkan ID pengguna saat ini
+    //         ResultSet resultSet = statement.executeQuery();
+    //         if (resultSet.next()) {
+    //             alamatPengguna = resultSet.getString(1);
+    //         } else {
+    //             showErrorAlert("Lokasi", "Alamat pengguna tidak ditemukan!");
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return alamatPengguna;
+    // }
 
     public static String getLokasiPengambilan(int idMakanan) {
         String lokasiPengambilan = null;
