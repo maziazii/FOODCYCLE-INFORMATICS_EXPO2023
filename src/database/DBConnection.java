@@ -2,7 +2,11 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import model.Session;
 
 /**
  * @author LEMTIKOM
@@ -41,5 +45,43 @@ public class DBConnection {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static String getAlamatPengguna() {
+        String alamatPengguna = null;
+
+        try (Connection connection = getConnection()) {
+            String query = "SELECT alamat FROM tbregistrasi WHERE idPengguna = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, Session.getUserId()); // Gantikan dengan metode yang sesuai untuk mendapatkan ID pengguna saat ini
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                alamatPengguna = resultSet.getString("alamat");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return alamatPengguna;
+    }
+
+    public static String getLokasiPengambilan(int idMakanan) {
+        String lokasiPengambilan = null;
+
+        try (Connection connection = getConnection()) {
+            String query = "SELECT lokasiPengambilan FROM tbmakanan WHERE idMakanan = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idMakanan);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                lokasiPengambilan = resultSet.getString("lokasiPengambilan");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lokasiPengambilan;
     }
 }

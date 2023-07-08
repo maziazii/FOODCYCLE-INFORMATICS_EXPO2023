@@ -107,13 +107,6 @@ public class MemesanController implements Initializable {
         return jumlahMakanan <= getSelectedMakanan().getJumlahMakanan();
     }
 
-    // private boolean validateExpirationDate() {
-    //     LocalDate today = LocalDate.now();
-    //     //LocalDate expirationDate = getSelectedMakanan().getTanggalKadaluwarsa();
-    //     return expirationDate.isAfter(today) || expirationDate.isEqual(today);
-    // }
-
-
     @FXML
     private void handleButtonKembaliAction(ActionEvent event)  throws Exception{
         System.out.println("tes");
@@ -124,7 +117,6 @@ public class MemesanController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -134,38 +126,27 @@ public class MemesanController implements Initializable {
     private void handleButtonPilihAction(ActionEvent event) throws Exception {
         Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
         String metodePengambilan = CBpengambilan.getValue();
-        int jumlahMakanan = Integer.parseInt(TCJumlah.getText());
 
-        if (!validateQuantity(jumlahMakanan)) {
-            showErrorAlert("Error", "Jumlah makanan yang disimpan melebihi stok yang tersedia.");
-            return;
-        }
-
-        // if (!validateExpirationDate()) {
-        //     showErrorAlert("Error", "Makanan sudah kadaluwarsa.");
-        //     return;
-        // }
-        
         if (selectedMakanan != null) {
+            // Mendapatkan jumlah makanan dari objek Makanan terpilih
             if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
-                // Implementasi logika untuk pesanan
                 showErrorAlert("Jumlah & Metode Pengambilan", "Harap tentukan jumlah pesanan dan pilih metode pengambilan terlebih dahulu.");
             } else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
             } else if (jumlahPesanan == 0) {
                 showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
             } else {
-                if (isDatePickerSelected()) {
+                if (!isDatePickerSelected()) {
+                    showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan terlebih dahulu.");
+                } else {
                     System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
                     // Lakukan aksi pengurangan jumlah pesanan dan update label jumlah pesanan
                     jumlahPesanan--;
                     LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
-    
+        
                     // Lakukan aksi pengurangan jumlah makanan di database
                     int idMakanan = selectedMakanan.getIdMakanan();
                     updateJumlahMakanan(idMakanan, selectedMakanan.getJumlahMakanan() - 1);
-                } else {
-                    showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan terlebih dahulu.");
                 }
             }
         } else {
@@ -311,7 +292,19 @@ public class MemesanController implements Initializable {
         CBpengambilan.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Pilih Metode Pengambilan")) {
                 CBpengambilan.getSelectionModel().clearSelection();
-        } else {
+            } else if (newValue.equals("Makanan Diantar")) {
+                String alamatPengguna = DBConnection.getAlamatPengguna();
+                Llokasi.setText(alamatPengguna);
+            } else if (newValue.equals("Ambil Langsung")) {
+                Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
+                if (selectedMakanan != null) {
+                    String lokasiPengambilan = DBConnection.getLokasiPengambilan(selectedMakanan.getIdMakanan());
+                    Llokasi.setText(lokasiPengambilan);
+                } else {
+                    Llokasi.setText("");
+                }
+            } else {
+                Llokasi.setText("");
             }
         });
 

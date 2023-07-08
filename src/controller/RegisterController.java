@@ -90,7 +90,7 @@ public class RegisterController implements Initializable {
             return; 
         }
 
-        Registrasi registrasi = new Registrasi(nama, alamat, username, "", noTelepon, password); // Perhatikan perubahan di sini
+        Registrasi registrasi = new Registrasi(nama, alamat, username, noTelepon, password); // Perhatikan perubahan di sini
         saveRegistrasi(registrasi);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
@@ -141,14 +141,13 @@ public class RegisterController implements Initializable {
 
     private void saveRegistrasi(Registrasi registrasi) {
         try {
-            String sql = "INSERT INTO tbregistrasi (nama, alamat, noTelepon, username, password, peran) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO tbregistrasi (nama, alamat, noTelepon, username, password) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, registrasi.getNama());
             statement.setString(2, registrasi.getAlamat());
             statement.setString(3, registrasi.getnoTelepon());
             statement.setString(4, registrasi.getUsername());
             statement.setString(5, registrasi.getPassword());
-            statement.setString(6, registrasi.getPeran()); // Perhatikan perubahan di sini
 
             statement.executeUpdate();
 

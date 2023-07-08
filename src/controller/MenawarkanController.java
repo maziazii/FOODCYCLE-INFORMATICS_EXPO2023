@@ -5,8 +5,10 @@
 package controller;
 
 import model.Makanan;
+import model.Session;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.DBConnection;
 
@@ -130,14 +132,19 @@ public class MenawarkanController implements Initializable {
     private void saveMakananToDatabase(Makanan makanan) {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "INSERT INTO tbmakanan (tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO tbmakanan (idPengguna, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, makanan.getTanggalPenawaran());
-            statement.setString(2, makanan.getNamaMakanan());
-            statement.setInt(3, makanan.getJumlahMakanan());
-            statement.setString(4, makanan.getLokasiPengambilan());
-            statement.setString(5, makanan.getJenisMakanan());
-            statement.setString(6, makanan.getTanggalKadaluwarsa());
+    
+            String username = Session.getLoggedInUsername(); // Mendapatkan username dari Session
+            int idPengguna = getIdPenggunaFromDatabase(username);
+    
+            statement.setInt(1, idPengguna);
+            statement.setString(2, makanan.getTanggalPenawaran());
+            statement.setString(3, makanan.getNamaMakanan());
+            statement.setInt(4, makanan.getJumlahMakanan());
+            statement.setString(5, makanan.getLokasiPengambilan());
+            statement.setString(6, makanan.getJenisMakanan());
+            statement.setString(7, makanan.getTanggalKadaluwarsa());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -145,6 +152,27 @@ public class MenawarkanController implements Initializable {
         }
     }
 
+    private int getIdPenggunaFromDatabase(String username) {
+        int idPengguna = 0;
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT idPengguna FROM tbregistrasi WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                idPengguna = resultSet.getInt(1);
+            } else {
+                showErrorAlert("Username tidak ditemukan!");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Terjadi kesalahan dalam mendapatkan idPengguna!");
+        }
+        return idPengguna;
+    }
     private void showSuccessAlert() {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Penawaran Berhasil");

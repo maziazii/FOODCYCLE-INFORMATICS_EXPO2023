@@ -1,5 +1,6 @@
 package controller;
 
+import model.Session;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -29,6 +30,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
 
 /**
  * @author LEMTIKOM
@@ -121,7 +123,10 @@ public class LoginController implements Initializable {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 int count = resultSet.getInt(1);
-                return count > 0;
+                if (count > 0) {
+                    Session.setLoggedInUsername(username); // Menyimpan username ke dalam kelas Session
+                    return true;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

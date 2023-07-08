@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `tbmakanan` (
+  `idPengguna` int(255) NOT NULL,
   `idMakanan` int(255) NOT NULL,
   `tanggalPenawaran` varchar(50) NOT NULL,
   `namaMakanan` varchar(50) NOT NULL,
