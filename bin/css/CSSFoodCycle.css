@@ -274,3 +274,6 @@
 .table-row-cell:selected .table-cell {
     -fx-text-fill: #50B783;
 }
+.table-row-cell:row-diterima {
+    -fx-background-color: #66CC99;
+}

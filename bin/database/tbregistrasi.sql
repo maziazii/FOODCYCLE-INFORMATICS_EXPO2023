@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 09, 2023 at 09:14 AM
+-- Generation Time: Jul 07, 2023 at 03:42 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -24,40 +24,44 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbpenawaran`
+-- Table structure for table `tbregistrasi`
 --
 
-CREATE TABLE `tbpenawaran` (
-  `idPengguna` int(225) NOT NULL,
-  `idMakanan` int(225) NOT NULL,
-  `idPenawaran` int(225) NOT NULL,
-  `tanggalPenawaran` varchar(225) NOT NULL,
-  `namaMakanan` varchar(225) NOT NULL,
-  `jumlahMakanan` int(225) NOT NULL,
-  `jenisMakanan` varchar(225) NOT NULL,
-  `lokasiPengambilan` varchar(225) NOT NULL,
-  `tanggalKadaluwarsa` varchar(225) NOT NULL
+CREATE TABLE `tbregistrasi` (
+  `idPengguna` int(255) NOT NULL,
+  `nama` varchar(30) NOT NULL,
+  `alamat` text NOT NULL,
+  `noTelepon` varchar(15) NOT NULL,
+  `username` varchar(15) NOT NULL,
+  `password` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbregistrasi`
+--
+
+INSERT INTO `tbregistrasi` (`idPengguna`, `nama`, `alamat`, `noTelepon`, `username`, `password`) VALUES
+(16, 'Muhamad Azis', 'Umbulmartani, Kec.Ngalik, Kab.Sleman', '081215623332', 'maziazi', '12345678');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `tbpenawaran`
+-- Indexes for table `tbregistrasi`
 --
-ALTER TABLE `tbpenawaran`
-  ADD PRIMARY KEY (`idPenawaran`);
+ALTER TABLE `tbregistrasi`
+  ADD PRIMARY KEY (`idPengguna`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `tbpenawaran`
+-- AUTO_INCREMENT for table `tbregistrasi`
 --
-ALTER TABLE `tbpenawaran`
-  MODIFY `idPenawaran` int(225) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tbregistrasi`
+  MODIFY `idPengguna` int(225) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -43,12 +43,12 @@
       <Button fx:id="kurang" layoutX="235.0" layoutY="491.0" mnemonicParsing="false" onAction="#handleButtonKurangAction" prefHeight="30.0" prefWidth="30.0" styleClass="buttonTransparan" text="-" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" layoutX="585.0" layoutY="484.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangle" width="200.0" />
       <Label fx:id="Llokasi" layoutX="624.0" layoutY="493.0" prefHeight="25.0" prefWidth="154.0" />
-      <Label fx:id="LjumlahPesanan" layoutX="270.0" layoutY="494.0" prefHeight="25.0" prefWidth="67.0" />
+      <Label fx:id="LjumlahPesanan" layoutX="270.0" layoutY="494.0" prefHeight="25.0" prefWidth="67.0" textAlignment="CENTER" />
       <ImageView layoutX="590.0" layoutY="488.0">
          <image>
             <Image url="@../media/Memesan2.png" />
          </image>
       </ImageView>
-      <DatePicker fx:id="DPtanggalPemesanan" layoutX="20.0" layoutY="485.0" prefHeight="40.0" prefWidth="200.0" styleClass="date-picker" />
+      <DatePicker fx:id="DPtanggalPemesanan" layoutX="20.0" layoutY="485.0" prefHeight="40.0" prefWidth="200.0" promptText="Tanggal Pemesanan" styleClass="date-picker" />
    </children>
 </AnchorPane>

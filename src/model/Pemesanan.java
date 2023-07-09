@@ -9,8 +9,9 @@ public class Pemesanan {
     private int jumlahPemesanan;
     private String metodePengambilan;
     private String lokasiMetode;
+    private String status;
 
-    public Pemesanan(int idPengguna, int idMakanan, int idPemesanan, String tanggalPemesanan, String namaMakanan, int jumlahPemesanan, String metodePengambilan, String lokasiMetode) {
+    public Pemesanan(int idPengguna, int idMakanan, int idPemesanan, String tanggalPemesanan, String namaMakanan, int jumlahPemesanan, String metodePengambilan, String lokasiMetode, String status) {
         this.idPengguna = idPengguna;
         this.idMakanan = idMakanan;
         this.idPemesanan = idPemesanan;
@@ -19,6 +20,7 @@ public class Pemesanan {
         this.jumlahPemesanan = jumlahPemesanan;
         this.metodePengambilan = metodePengambilan;
         this.lokasiMetode = lokasiMetode;
+        this.status = status;
     }
 
     public int getIdPengguna() {
@@ -31,6 +33,10 @@ public class Pemesanan {
 
     public int getIdPemesanan() {
         return idPemesanan;
+    }
+
+    public void setIdPemesanan(int idPemesanan) {
+        this.idPemesanan = idPemesanan;
     }
 
     public String getTanggalPemesanan() {
@@ -51,5 +57,13 @@ public class Pemesanan {
 
     public String getLokasiMetode() {
         return lokasiMetode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

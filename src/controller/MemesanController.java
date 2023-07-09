@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -155,7 +156,7 @@ public class MemesanController implements Initializable {
             LocalDate today = LocalDate.now();
             LocalDate tanggalKadaluwarsa = LocalDate.parse(selectedMakanan.getTanggalKadaluwarsa());
             if (tanggalKadaluwarsa.isBefore(today)) {
-                showErrorAlert("Tanggal Kadaluwarsa", "Makanan yang dipilih sudah kadaluwarsa.");
+                showKadaluwarsaAlert(selectedMakanan);
                 return;
             } if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
                 showErrorAlert("Jumlah & Metode Pengambilan", "Harap tentukan jumlah pesanan dan pilih metode pengambilan terlebih dahulu.");
@@ -167,14 +168,17 @@ public class MemesanController implements Initializable {
                 if (!isDatePickerSelected()) {
                     showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan terlebih dahulu.");
                 } else {
-                    Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText());
+                    Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText(), "");
+                    pemesanan.setStatus("");
 
                     saveDataToDatabase(pemesanan);
+
+                    // Mengurangi stok makanan
+                    int stokMakanan = selectedMakanan.getJumlahMakanan();
+                    selectedMakanan.setJumlahMakanan(stokMakanan);
+                    updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
+
                     showSuccessAlert();
-
-
-
-
                 }
             }
         } else {
@@ -212,7 +216,6 @@ public class MemesanController implements Initializable {
             LjumlahPesanan.setText (String.valueOf(jumlahPesanan));
             stokMakanan--;
             selectedMakanan.setJumlahMakanan(stokMakanan);
-            updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
             } else {
                 showErrorAlert("Stok Makanan", "Stok makanan tidak mencukupi.");
             }
@@ -286,6 +289,38 @@ public class MemesanController implements Initializable {
         alert.showAndWait();
     }
 
+    private void showKadaluwarsaAlert(Makanan selectedMakanan) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Makanan Kadaluwarsa");
+        alert.setHeaderText(null);
+        alert.setContentText("Makanan yang dipilih (" + selectedMakanan.getNamaMakanan() + ") sudah kadaluwarsa.\nApakah Anda ingin melanjutkan pemesanan?");
+    
+        ButtonType lanjutkanButton = new ButtonType("Lanjutkan");
+        ButtonType batalkanButton = new ButtonType("Batalkan");
+    
+        alert.getButtonTypes().setAll(lanjutkanButton, batalkanButton);
+    
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResource("/media/attention.png").toString()));
+    
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/CSSFoodCycle.css").toExternalForm());
+        dialogPane.getStyleClass().add("alert-error");
+    
+        Optional<ButtonType> result = alert.showAndWait();
+    
+        if (result.isPresent()) {
+            if (result.get() == lanjutkanButton) {
+                // Update data pemesanan ke database dan kurangi jumlah makanan
+                updateDataPemesanan(selectedMakanan);
+            } else if (result.get() == batalkanButton) {
+                // Kembalikan data makanan ke database
+                kembalikanDataMakanan(selectedMakanan);
+            }
+        }
+    }
+    
+
     private void showSuccessAlert() {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Pesanan Berhasil Terkirim");
@@ -343,6 +378,36 @@ public class MemesanController implements Initializable {
         }
     }
 
+    private void updateDataPemesanan(Makanan selectedMakanan) {
+        // Simpan data pemesanan ke database
+        Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, CBpengambilan.getValue(), Llokasi.getText(), "");
+
+        saveDataToDatabase(pemesanan);
+    
+        // Kurangi jumlah makanan
+        int stokMakanan = selectedMakanan.getJumlahMakanan();
+        stokMakanan -= jumlahPesanan;
+        selectedMakanan.setJumlahMakanan(stokMakanan);
+        updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
+    
+        if (stokMakanan < 1) {
+            makananList.remove(selectedMakanan);
+            deleteMakananFromDatabase(selectedMakanan.getIdMakanan());
+        }
+        
+        // Tampilkan success alert
+        showSuccessAlert();
+    }
+
+    private void kembalikanDataMakanan(Makanan selectedMakanan) {
+        // Kembalikan data makanan ke database
+        Makanan makanan = new Makanan(selectedMakanan.getIdMakanan(), selectedMakanan.getTanggalPenawaran(), selectedMakanan.getNamaMakanan(), selectedMakanan.getJumlahMakanan() + jumlahPesanan, selectedMakanan.getLokasiPengambilan(), selectedMakanan.getJenisMakanan(), selectedMakanan.getTanggalKadaluwarsa());
+        updateJumlahMakanan(selectedMakanan.getIdMakanan(), makanan.getJumlahMakanan());
+        makananList.set(makananList.indexOf(selectedMakanan), makanan);
+    }
+
+
+    
     private void resetForm() {
         DPtanggalPemesanan.setValue(null);
         LjumlahPesanan.setText("0");
@@ -375,12 +440,12 @@ public class MemesanController implements Initializable {
     private void saveDataToDatabase(Pemesanan pemesanan) {
         try {
             Connection connection = DBConnection.getConnection();
-            String querry = "INSERT INTO tbpemesanan (idPengguna, idMakanan, tanggalPemesanan, namaMakanan, jumlahPemesanan, metodePengambilan, lokasiMetode) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement statement = connection.prepareStatement(querry);
+            String query = "INSERT INTO tbpemesanan (idPengguna, idMakanan, tanggalPemesanan, namaMakanan, jumlahPemesanan, metodePengambilan, lokasiMetode, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             String username = Session.getLoggedInUsername();
             int idPengguna = getIdPengguna(username);
-    
+
             statement.setInt(1, idPengguna);
             statement.setInt(2, pemesanan.getIdMakanan());
             statement.setString(3, pemesanan.getTanggalPemesanan());
@@ -388,12 +453,24 @@ public class MemesanController implements Initializable {
             statement.setInt(5, pemesanan.getJumlahPemesanan());
             statement.setString(6, pemesanan.getMetodePengambilan());
             statement.setString(7, pemesanan.getLokasiMetode());
+            statement.setString(8, pemesanan.getStatus());
+
             statement.executeUpdate();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int idPemesanan = generatedKeys.getInt(1);
+                pemesanan.setIdPemesanan(idPemesanan);
+            }
+
+            generatedKeys.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
             showErrorAlert("Error", "Failed to save data to the database.");
         }
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

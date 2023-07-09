@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 09, 2023 at 09:14 AM
+-- Generation Time: Jun 29, 2023 at 11:14 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -24,19 +24,18 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbpenawaran`
+-- Table structure for table `tbmakanan`
 --
 
-CREATE TABLE `tbpenawaran` (
-  `idPengguna` int(225) NOT NULL,
-  `idMakanan` int(225) NOT NULL,
-  `idPenawaran` int(225) NOT NULL,
-  `tanggalPenawaran` varchar(225) NOT NULL,
-  `namaMakanan` varchar(225) NOT NULL,
-  `jumlahMakanan` int(225) NOT NULL,
-  `jenisMakanan` varchar(225) NOT NULL,
-  `lokasiPengambilan` varchar(225) NOT NULL,
-  `tanggalKadaluwarsa` varchar(225) NOT NULL
+CREATE TABLE `tbmakanan` (
+  `idPengguna` int(255) NOT NULL,
+  `idMakanan` int(255) NOT NULL,
+  `tanggalPenawaran` varchar(50) NOT NULL,
+  `namaMakanan` varchar(50) NOT NULL,
+  `jumlahMakanan` int(255) NOT NULL,
+  `lokasiPengambilan` varchar(50) NOT NULL,
+  `jenisMakanan` varchar(50) NOT NULL,
+  `tanggalKadaluwarsa` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -44,20 +43,20 @@ CREATE TABLE `tbpenawaran` (
 --
 
 --
--- Indexes for table `tbpenawaran`
+-- Indexes for table `tbmakanan`
 --
-ALTER TABLE `tbpenawaran`
-  ADD PRIMARY KEY (`idPenawaran`);
+ALTER TABLE `tbmakanan`
+  ADD PRIMARY KEY (`idMakanan`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `tbpenawaran`
+-- AUTO_INCREMENT for table `tbmakanan`
 --
-ALTER TABLE `tbpenawaran`
-  MODIFY `idPenawaran` int(225) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tbmakanan`
+  MODIFY `idMakanan` int(255) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
