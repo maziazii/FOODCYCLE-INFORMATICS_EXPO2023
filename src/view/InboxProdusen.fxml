@@ -21,7 +21,7 @@
             <Image url="@../media/Inbox1.png" />
          </image>
       </ImageView>
-      <TableView fx:id="TVinbox" layoutX="20.0" layoutY="100.0" prefHeight="430.0" prefWidth="760.0">
+      <TableView fx:id="TVinbox" layoutX="20.0" layoutY="100.0" prefHeight="430.0" prefWidth="760.0" stylesheets="@../css/CSSFoodCycle.css">
         <columns>
           <TableColumn fx:id="TCidPemesanan" prefWidth="100.0" text="Id Pesan" />
           <TableColumn fx:id="TCstatus" prefWidth="110.0" text="Status" />

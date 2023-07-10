@@ -27,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Penawaran;
+import model.Session;
 
 public class RiwayatProdusenController implements Initializable {
     @FXML
@@ -58,7 +59,6 @@ public class RiwayatProdusenController implements Initializable {
 
     @FXML
     private void handleButtonKembaliAction(ActionEvent event) throws Exception {
-        System.out.println("tes");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(RiwayatProdusenController.class.getResource("/view/HomeProdusen.fxml"));
         Stage dialogStage = new Stage();
@@ -66,19 +66,18 @@ public class RiwayatProdusenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(loader.load());
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
     }
 
-    private ObservableList<Penawaran> getDataFromDatabase() {
+    private ObservableList<Penawaran> getDataFromDatabase(String username) {
         ObservableList<Penawaran> penawaranList = FXCollections.observableArrayList();
-
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM tbpenawaran";
+            String query = "SELECT * FROM tbpenawaran WHERE idPengguna = (SELECT idPengguna FROM tbregistrasi WHERE username = ?)";
             PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
@@ -121,7 +120,9 @@ public class RiwayatProdusenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<Penawaran> penawaranList = getDataFromDatabase();
+        String username = Session.getLoggedInUsername();
+
+        ObservableList<Penawaran> penawaranList = getDataFromDatabase(username);
 
         TVriwayatProdusen.setItems(penawaranList);
 
