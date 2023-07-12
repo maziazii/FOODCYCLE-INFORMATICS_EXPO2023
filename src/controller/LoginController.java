@@ -168,7 +168,7 @@ public class LoginController implements Initializable {
         });
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://aws.connect.psdb.cloud/foodcycle?sslMode=VERIFY_IDENTITY", "hr68d6ypo2sfe8p8uv5b", "pscale_pw_j140KSL2BACgELqQ8yHVVpRei2FL186hBMAunUbLg8A"); // Sesuaikan dengan informasi koneksi Anda
+            connection = DriverManager.getConnection("jdbc:mysql://aws.connect.psdb.cloud/foodcycle?sslMode=VERIFY_IDENTITY", "7eo2jf9iljwaakdyodtd", "pscale_pw_uLSxnS418tRTB0BDMOAaOeXPYQTDwWBsE8VrEoCeY0g"); // Sesuaikan dengan informasi koneksi Anda
         } catch (SQLException e) {
             e.printStackTrace();
         }

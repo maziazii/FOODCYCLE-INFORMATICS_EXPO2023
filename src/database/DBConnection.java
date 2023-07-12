@@ -14,8 +14,8 @@ import java.sql.SQLException;
  */
 public class DBConnection {
     private static final String DB_URL = "jdbc:mysql://aws.connect.psdb.cloud/foodcycle?sslMode=VERIFY_IDENTITY";
-    private static final String USERNAME = "hr68d6ypo2sfe8p8uv5b";
-    private static final String PASSWORD = "pscale_pw_j140KSL2BACgELqQ8yHVVpRei2FL186hBMAunUbLg8A";
+    private static final String USERNAME = "7eo2jf9iljwaakdyodtd";
+    private static final String PASSWORD = "pscale_pw_uLSxnS418tRTB0BDMOAaOeXPYQTDwWBsE8VrEoCeY0g";
 
     private static Connection connection;
 
