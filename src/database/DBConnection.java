@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static final String DB_URL = "jdbc:mysql://15.235.193.145/foodcycl_dbfoodcycle";
-    private static final String USERNAME = "foodcycl";
-    private static final String PASSWORD = "tsQoL26a34";
+    private static final String DB_URL = "jdbc:mysql://aws.connect.psdb.cloud/dbfoodcycle?sslMode=VERIFY_IDENTITY";
+    private static final String USERNAME = "wn13qlo7ekzr2extk4pb";
+    private static final String PASSWORD = "pscale_pw_WpLBD7YKBM72gT7IsiBJ6uhSM5X0ihYdv37xbhig1tX";
 
     private static Connection connection;
 

@@ -159,7 +159,11 @@ public class LoginController implements Initializable {
         });
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://aws.connect.psdb.cloud/dbfoodcycle?sslMode=VERIFY_IDENTITY", "dqm8fgh0fqjdpltcmlz0", "pscale_pw_2fbpBlyeZQ2HQzP6lt1AfIE1T4cI1H4ZesKek2cm8PG"); // Sesuaikan dengan informasi koneksi Anda
+            String URL = "jdbc:mysql://aws.connect.psdb.cloud/dbfoodcycle?sslMode=VERIFY_IDENTITY";
+            String username = "wn13qlo7ekzr2extk4pb";
+            String password = "pscale_pw_WpLBD7YKBM72gT7IsiBJ6uhSM5X0ihYdv37xbhig1tX";
+            
+            connection = DriverManager.getConnection(URL, username, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -176,4 +180,3 @@ public class LoginController implements Initializable {
         }
     }
 }
-
