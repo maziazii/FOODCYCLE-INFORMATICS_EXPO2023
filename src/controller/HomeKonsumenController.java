@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
- */
 package controller;
 
 import java.io.IOException;
@@ -16,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 
 /**
  * @author LEMTIKOM
@@ -52,7 +47,6 @@ public class HomeKonsumenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -68,7 +62,6 @@ public class HomeKonsumenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -84,7 +77,6 @@ public class HomeKonsumenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -100,7 +92,6 @@ public class HomeKonsumenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -116,7 +107,6 @@ public class HomeKonsumenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();

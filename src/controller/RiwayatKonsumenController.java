@@ -73,16 +73,16 @@ public class RiwayatKonsumenController implements Initializable {
         currentStage.close();
     }
 
-    private ObservableList<Pemesanan> getDataFromDatabase(String username) {
-        ObservableList<Pemesanan> pemesananList = FXCollections.observableArrayList();
-    
+    private ObservableList<Pemesanan> getDiterimaPemesananFromDatabase(String username) {
+         ObservableList<Pemesanan> pemesananList = FXCollections.observableArrayList();
+        
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM tbpemesanan WHERE idPengguna = (SELECT idPengguna FROM tbregistrasi WHERE username = ?)";
+            String query = "SELECT * FROM tbpemesanan WHERE idPengguna = (SELECT idPengguna FROM tbregistrasi WHERE username = ?) AND status = 'Diterima'";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
-    
+        
             while (resultSet.next()) {
                 int idPengguna = resultSet.getInt("idPengguna");
                 int idPemesanan = resultSet.getInt("idPemesanan");
@@ -93,20 +93,20 @@ public class RiwayatKonsumenController implements Initializable {
                 String metodePengambilan = resultSet.getString("metodePengambilan");
                 String lokasiMetode = resultSet.getString("lokasiMetode");
                 String status = resultSet.getString("status");
-    
+        
                 Pemesanan pemesanan = new Pemesanan(idPengguna, idMakanan, idPemesanan, tanggalPemesanan, namaMakanan, jumlahPemesanan, metodePengambilan, lokasiMetode, status);
                 pemesananList.add(pemesanan);
             }
+        
             statement.close();
             resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
             showErrorAlert("Error", "Failed to retrieve data from the database.");
         }
-    
+        
         return pemesananList;
     }
-    
 
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -124,15 +124,13 @@ public class RiwayatKonsumenController implements Initializable {
         alert.showAndWait();
     }
 
-    
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Mendapatkan username pengguna yang sedang login
         String username = Session.getLoggedInUsername();
 
         // Mengambil data pemesanan dari database berdasarkan username pengguna
-        ObservableList<Pemesanan> pemesananList = getDataFromDatabase(username);
+        ObservableList<Pemesanan> pemesananList = getDiterimaPemesananFromDatabase(username);
 
         // Mengatur ObservableList sebagai data sumber TableView
         TVriwayatKonsumen.setItems(pemesananList);
@@ -146,5 +144,4 @@ public class RiwayatKonsumenController implements Initializable {
         TClokasiMetode.setCellValueFactory(new PropertyValueFactory<>("lokasiMetode"));
         TCTanggalPemesanan.setCellValueFactory(new PropertyValueFactory<>("tanggalPemesanan"));
     }
-
 }

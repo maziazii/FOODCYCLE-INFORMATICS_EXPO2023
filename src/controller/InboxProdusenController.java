@@ -21,7 +21,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
@@ -31,6 +30,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Pemesanan;
 import model.Session;
+
 /**
  * @author LEMTIKOM
  * Muhamad Azis - 22523289
@@ -66,12 +66,6 @@ public class InboxProdusenController implements Initializable {
     @FXML
     private TableView<Pemesanan> TVinbox;
 
-    // @FXML
-    // private TableView<InboxItem> TVinbox;
-
-    // @FXML
-    // private TableColumn<InboxItem, String> TCstatus;
-
     @FXML
     private Button kembali;
 
@@ -85,14 +79,9 @@ public class InboxProdusenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
-    }
-
-    @FXML
-    private void handleButtonAction(ActionEvent event)throws Exception{
     }
 
     private ObservableList<Pemesanan> getDataFromDatabase(String username) {
@@ -129,6 +118,29 @@ public class InboxProdusenController implements Initializable {
         return pemesananList;
     }
     
+    private int getIdMakananByUsername(String username) {
+        int idMakanan = 0;
+    
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT idMakanan FROM tbpenawaran WHERE idPengguna = (SELECT idPengguna FROM tbregistrasi WHERE username = ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+    
+            if (resultSet.next()) {
+                idMakanan = resultSet.getInt("idMakanan");
+            }
+    
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "Failed to retrieve data from the database.");
+        }
+    
+        return idMakanan;
+    }    
 
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -170,11 +182,12 @@ public class InboxProdusenController implements Initializable {
     
     private void refreshTableData() {
         String username = Session.getLoggedInUsername();
+        String selectedStatus = CBstatus.getValue(); 
     
-        ObservableList<Pemesanan> pemesananList = getDataFromDatabase(username);
+        ObservableList<Pemesanan> pemesananList = getDataFromDatabase(username).filtered(pemesanan -> pemesanan.getStatus().equals(selectedStatus)); 
     
         TVinbox.setItems(pemesananList);
-
+    
         CBstatus.getSelectionModel().clearSelection();
         CBstatus.getSelectionModel().selectFirst();
     }
@@ -197,8 +210,9 @@ public class InboxProdusenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         String username = Session.getLoggedInUsername();
+        int idMakanan = getIdMakananByUsername(username);
 
-        ObservableList<Pemesanan> pemesananList = getDataFromDatabase(username);
+        ObservableList<Pemesanan> pemesananList = getDataFromDatabase(username).filtered(pemesanan -> pemesanan.getIdMakanan() == idMakanan);
 
         TVinbox.setItems(pemesananList);
 
@@ -220,7 +234,7 @@ public class InboxProdusenController implements Initializable {
                 }
             });
             return row;
-        });
+        });        
 
         ObservableList<String> options = FXCollections.observableArrayList(
             "Pilih Status Pengambilan",
@@ -245,8 +259,12 @@ public class InboxProdusenController implements Initializable {
                     if (newValue.equals("Diterima")) {
                         showSuccessAlert("Pemesanan Diterima", "Pemesanan dengan ID " + selectedPemesanan.getIdPemesanan() + " sudah diterima oleh konsumen.");
                     }
+
+                    String selectedStatus = selectedPemesanan.getStatus();
+                    ObservableList<Pemesanan> pemesanan1List = TVinbox.getItems().filtered(pemesanan -> pemesanan.getStatus().equals(selectedStatus));
+                    TVinbox.setItems(pemesanan1List);
                 }
             }
-        });        
+        });               
     }
 }

@@ -28,6 +28,13 @@ import javafx.stage.Stage;
 import model.Pemesanan;
 import model.Session;
 
+/**
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
+ */
 public class InboxKonsumenController implements Initializable {
     
     @FXML
@@ -67,7 +74,6 @@ public class InboxKonsumenController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(loader.load());
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -107,7 +113,6 @@ public class InboxKonsumenController implements Initializable {
         return pemesananList;
     }
     
-
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -126,16 +131,13 @@ public class InboxKonsumenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Mendapatkan username pengguna yang sedang login
+        //TODO
         String username = Session.getLoggedInUsername();
 
-        // Mengambil data pemesanan dari database berdasarkan username pengguna
         ObservableList<Pemesanan> pemesananList = getDataFromDatabase(username);
 
-        // Mengatur ObservableList sebagai data sumber TableView
         TVriwayat.setItems(pemesananList);
 
-        // Mengatur kolom-kolom untuk menampilkan data pemesanan
         TCidPemesanan.setCellValueFactory(new PropertyValueFactory<>("idPemesanan"));
         TCidMakanan.setCellValueFactory(new PropertyValueFactory<>("idMakanan"));
         TCnama.setCellValueFactory(new PropertyValueFactory<>("namaMakanan"));

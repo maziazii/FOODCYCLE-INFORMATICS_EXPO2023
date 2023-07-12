@@ -1,6 +1,5 @@
 package controller;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -31,7 +30,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.Session;
-
 
 /**
  * @author LEMTIKOM
@@ -70,7 +68,6 @@ public class LoginController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
