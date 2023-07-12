@@ -14,4 +14,4 @@ Langkah langkah :
 5. Bisa registrasi akun baru atau mengunakan akun yang sudah ada (username : gar dan passwordnya : gar)
 6. Silahkan explore akun kita
 
-ini untuk link githubnya : https://github.com/maziazii/FOODCYCLE-INFORMATICS_EXPO2023.git
+ini untuk link githubnya : https://github.com/maziazii/FOODCYCLE-INFORMATICS_EXPO2023/tree/huda
