@@ -1,8 +1,15 @@
 package model;
 
+
+/**
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
+ */
 public class Makanan {
-    private int makanan_id;
-    private int pengguna_id;
+    private int idMakanan;
     private String tanggalPenawaran;
     private String namaMakanan;
     private int jumlahMakanan;
@@ -10,8 +17,8 @@ public class Makanan {
     private String jenisMakanan;
     private String tanggalKadaluwarsa;
 
-    public Makanan(int makanan_id, String tanggalPenawaran, String namaMakanan, int jumlahMakanan, String lokasiPengambilan, String jenisMakanan, String tanggalKadaluwarsa) {
-        this.makanan_id = makanan_id;
+    public Makanan(int idMakanan, String tanggalPenawaran, String namaMakanan, int jumlahMakanan, String lokasiPengambilan, String jenisMakanan, String tanggalKadaluwarsa) {
+        this.idMakanan = idMakanan;
         this.tanggalPenawaran = tanggalPenawaran;
         this.namaMakanan = namaMakanan;
         this.jumlahMakanan = jumlahMakanan;    
@@ -20,8 +27,8 @@ public class Makanan {
         this.tanggalKadaluwarsa = tanggalKadaluwarsa;  
     }
 
-    public int getMakanan_id() {
-        return makanan_id;
+    public int getIdMakanan() {
+        return idMakanan;
     }
     public String getTanggalPenawaran() {
         return tanggalPenawaran;

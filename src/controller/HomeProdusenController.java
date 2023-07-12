@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
- */
 package controller;
 
 import java.io.IOException;
@@ -17,10 +13,12 @@ import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-
 /**
- *
- * @author zain
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
  */
 public class HomeProdusenController implements Initializable {
     @FXML

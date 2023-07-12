@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
- */
 package controller;
 
 import java.net.URL;
@@ -10,21 +6,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-//import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
-
-
 /**
- *
- * @author zain
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
  */
 public class LandingPageController implements Initializable {
-
 
     @FXML
     private Button login;
@@ -42,7 +37,6 @@ public class LandingPageController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -58,16 +52,13 @@ public class LandingPageController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
     }
-
-        
+   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-
     }    
 }

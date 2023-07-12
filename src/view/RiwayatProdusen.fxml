@@ -20,13 +20,14 @@
             <Image url="@../media/Riwayat1.png" />
          </image>
       </ImageView>
-      <TableView fx:id="TVriwayat" layoutX="20.0" layoutY="100.0" prefHeight="480.0" prefWidth="760.0">
+      <TableView fx:id="TVriwayatProdusen" layoutX="20.0" layoutY="100.0" prefHeight="480.0" prefWidth="760.0">
         <columns>
           <TableColumn fx:id="TCidMakanan" prefWidth="110.0" text="Id Makanan" />
-          <TableColumn fx:id="TCnama" prefWidth="110.0" text="Nama" />
-            <TableColumn fx:id="TCjumlah" prefWidth="110.0" text="Jumlah" />
+            <TableColumn fx:id="TCtanggalPenawaran" prefWidth="110.0" text="Tanggal" />
+          <TableColumn fx:id="TCnamaMakanan" prefWidth="110.0" text="Nama" />
+            <TableColumn fx:id="TCjumlahMakanan" prefWidth="110.0" text="Jumlah" />
             <TableColumn fx:id="TCjenis" prefWidth="110.0" text="Jenis" />
-            <TableColumn fx:id="TClokasiPengambilan" prefWidth="210.0" text="Lokasi Pengambilan" />
+            <TableColumn fx:id="TClokasi" prefWidth="210.0" text="Lokasi Pengambilan" />
             <TableColumn fx:id="TCkadaluwarsa" prefWidth="110.0" text="Kadaluwarsa" />
         </columns>
       </TableView>

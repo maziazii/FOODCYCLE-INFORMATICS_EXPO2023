@@ -29,8 +29,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.Session;
 
-
+/**
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
+ */
 public class LoginController implements Initializable {
 
     @FXML
@@ -61,7 +68,6 @@ public class LoginController implements Initializable {
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
         Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
         currentStage.close();
@@ -107,7 +113,7 @@ public class LoginController implements Initializable {
 
     private boolean login(String username, String password) {
         try {
-            String query = "SELECT COUNT(*) FROM tblpengguna WHERE username = ? AND password = ?";
+            String query = "SELECT COUNT(*) FROM tbregistrasi WHERE username = ? AND password = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
             statement.setString(2, password);
@@ -115,7 +121,10 @@ public class LoginController implements Initializable {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 int count = resultSet.getInt(1);
-                return count > 0;
+                if (count > 0) {
+                    Session.setLoggedInUsername(username); // Menyimpan username ke dalam kelas Session
+                    return true;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -159,11 +168,7 @@ public class LoginController implements Initializable {
         });
 
         try {
-            String URL = "jdbc:mysql://aws.connect.psdb.cloud/dbfoodcycle?sslMode=VERIFY_IDENTITY";
-            String username = "wn13qlo7ekzr2extk4pb";
-            String password = "pscale_pw_WpLBD7YKBM72gT7IsiBJ6uhSM5X0ihYdv37xbhig1tX";
-            
-            connection = DriverManager.getConnection(URL, username, password);
+            connection = DriverManager.getConnection("jdbc:mysql://aws.connect.psdb.cloud/foodcycle?sslMode=VERIFY_IDENTITY", "hr68d6ypo2sfe8p8uv5b", "pscale_pw_j140KSL2BACgELqQ8yHVVpRei2FL186hBMAunUbLg8A"); // Sesuaikan dengan informasi koneksi Anda
         } catch (SQLException e) {
             e.printStackTrace();
         }

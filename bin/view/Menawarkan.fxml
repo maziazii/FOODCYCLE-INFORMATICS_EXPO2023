@@ -28,7 +28,7 @@
             <Point3D />
          </rotationAxis>
       </Button>
-      <DatePicker fx:id="DPPenawaran" layoutX="53.0" layoutY="362.0" pickOnBounds="false" prefHeight="58.0" prefWidth="209.0" promptText="Tanggal Penawaran" styleClass="DatePicker" stylesheets="@../css/CSSFoodCycle.css" />
+      <DatePicker fx:id="DPPenawaran" layoutX="53.0" layoutY="362.0" pickOnBounds="false" prefHeight="58.0" prefWidth="209.0" promptText="Tanggal Penawaran" stylesheets="@../css/CSSFoodCycle.css" />
       <ImageView layoutX="37.0" layoutY="28.0">
          <image>
             <Image url="@../media/Back.png" />

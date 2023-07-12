@@ -5,9 +5,14 @@
 package controller;
 
 import model.Makanan;
+import model.Penawaran;
+import model.Session;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 import database.DBConnection;
 
 import java.io.IOException;
@@ -37,8 +42,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 /**
- *
- * @author zain
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
  */
 public class MenawarkanController implements Initializable {
     
@@ -107,9 +115,8 @@ public class MenawarkanController implements Initializable {
                 showErrorAlert("Harap pilih jenis makanan!");
             } else {
                 Makanan makanan = new Makanan(0, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa);
-                saveMakananToDatabase(makanan);
+                saveMakanandanPenawaranToDatabase(makanan);
                 showSuccessAlert();
-                isPenawaranDilakukan = true;
             }
         } else {
             showErrorAlert("Harap isi semua data yang diperlukan!");
@@ -124,22 +131,73 @@ public class MenawarkanController implements Initializable {
         return true;
     }
 
-    private void saveMakananToDatabase(Makanan makanan) {
+    private void saveMakanandanPenawaranToDatabase(Makanan makanan) {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "INSERT INTO tblmakanan (pengguna_id, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluarsa) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, makanan.getTanggalPenawaran());
-            statement.setString(2, makanan.getNamaMakanan());
-            statement.setInt(3, makanan.getJumlahMakanan());
-            statement.setString(4, makanan.getLokasiPengambilan());
-            statement.setString(5, makanan.getJenisMakanan());
-            statement.setString(6, makanan.getTanggalKadaluwarsa());
-            statement.executeUpdate();
+            String queryMakanan = "INSERT INTO tbmakanan (idPengguna, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String queryPenawaran = "INSERT INTO tbpenawaran (idPengguna, idMakanan, idPenawaran, tanggalPenawaran, namaMakanan, jumlahMakanan, jenisMakanan, lokasiPengambilan, tanggalKadaluwarsa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            PreparedStatement statementMakanan = connection.prepareStatement(queryMakanan, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statementPenawaran = connection.prepareStatement(queryPenawaran);
+            
+            String username = Session.getLoggedInUsername(); // Mendapatkan username dari Session
+            int idPengguna = getIdPenggunaFromDatabase(username);
+    
+            statementMakanan.setInt(1, idPengguna);
+            statementMakanan.setString(2, makanan.getTanggalPenawaran());
+            statementMakanan.setString(3, makanan.getNamaMakanan());
+            statementMakanan.setInt(4, makanan.getJumlahMakanan());
+            statementMakanan.setString(5, makanan.getLokasiPengambilan());
+            statementMakanan.setString(6, makanan.getJenisMakanan());
+            statementMakanan.setString(7, makanan.getTanggalKadaluwarsa());
+            statementMakanan.executeUpdate();
+    
+            // Dapatkan ID makanan yang baru saja ditambahkan
+            ResultSet generatedKeys = statementMakanan.getGeneratedKeys();
+            int idMakanan = 0;
+            if (generatedKeys.next()) {
+                idMakanan = generatedKeys.getInt(1);
+            }
+            
+            statementPenawaran.setInt(1, idPengguna);
+            statementPenawaran.setInt(2, idMakanan);
+            statementPenawaran.setString(3, null); // Menggunakan null untuk idPenawaran karena akan di-generate otomatis oleh database
+            statementPenawaran.setString(4, makanan.getTanggalPenawaran());
+            statementPenawaran.setString(5, makanan.getNamaMakanan());
+            statementPenawaran.setInt(6, makanan.getJumlahMakanan());
+            statementPenawaran.setString(7, makanan.getJenisMakanan());
+            statementPenawaran.setString(8, makanan.getLokasiPengambilan());
+            statementPenawaran.setString(9, makanan.getTanggalKadaluwarsa());
+            statementPenawaran.executeUpdate();
+            
+            statementMakanan.close();
+            statementPenawaran.close();
         } catch (SQLException e) {
             e.printStackTrace();
             showErrorAlert("Terjadi kesalahan dalam menyimpan data makanan!");
         }
+    }
+    
+    private int getIdPenggunaFromDatabase(String username) {
+        int idPengguna = 0;
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT idPengguna FROM tbregistrasi WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                idPengguna = resultSet.getInt(1);
+            } else {
+                showErrorAlert("Username tidak ditemukan!");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Terjadi kesalahan dalam mendapatkan idPengguna!");
+        }
+        return idPengguna;
     }
 
     private void showSuccessAlert() {
@@ -147,38 +205,37 @@ public class MenawarkanController implements Initializable {
         alert.setTitle("Penawaran Berhasil");
         alert.setHeaderText(null);
         alert.setContentText("Data makanan berhasil ditawarkan. Apakah anda akan melakukan penawaran baru?");
-        
+    
         ButtonType okButton = new ButtonType("TIDAK");
         ButtonType penawaranBaruButton = new ButtonType("Penawaran Baru");
-
+    
         alert.getButtonTypes().setAll(okButton, penawaranBaruButton);
-
+    
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass().getResource("/media/checklist.png").toString()));
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("/css/CSSFoodCycle.css").toExternalForm());
         dialogPane.getStyleClass().add("alert-success");
-        
+    
         Optional<ButtonType> result = alert.showAndWait();
-
+    
         if (result.isPresent()) {
             if (result.get() == okButton) {
                 // Lakukan tindakan jika OK dipilih (misalnya menutup dialog)
                 alert.close();
                 try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeProdusen.fxml"));
-                Stage homeProdusenStage = new Stage();
-                homeProdusenStage.setTitle("Home Produsen");
-                homeProdusenStage.setScene(new Scene(loader.load()));
-                homeProdusenStage.initModality(Modality.APPLICATION_MODAL);
-                homeProdusenStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeProdusen.fxml"));
+                    Stage homeProdusenStage = new Stage();
+                    homeProdusenStage.setTitle("Home Produsen");
+                    homeProdusenStage.setScene(new Scene(loader.load()));
+                    homeProdusenStage.initModality(Modality.APPLICATION_MODAL);
+                    homeProdusenStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if (result.get() == penawaranBaruButton) {
-                // Reset data input dan status penawaran.
+                // Reset data input
                 resetForm();
-                isPenawaranDilakukan = false;
             }
         }
     }
@@ -200,14 +257,12 @@ public class MenawarkanController implements Initializable {
     }
 
     private void resetForm() {
-        // Reset semua input form ke nilai awal
         DPPenawaran.setValue(null);
         TFNamaMakanan.clear();
         TFJumlahMakanan.clear();
         TFLokasiPengambilan.clear();
         CBJenis.getSelectionModel().clearSelection();
         DPKadaluwarsa.setValue(null);
-        isPenawaranDilakukan = false;
     }
         
     @Override
@@ -229,5 +284,7 @@ public class MenawarkanController implements Initializable {
                 // Lakukan tindakan lain sesuai pilihan pengguna
             }
         });
+
+        isPenawaranDilakukan = false;
     }       
 }

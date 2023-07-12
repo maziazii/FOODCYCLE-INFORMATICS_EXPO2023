@@ -23,11 +23,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Pengguna;
+import model.Registrasi;
 
 /**
- *
- * @author zain
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
  */
 public class RegisterController implements Initializable {
 
@@ -87,8 +90,8 @@ public class RegisterController implements Initializable {
             return; 
         }
 
-        Pengguna pengguna = new Pengguna("", nama, alamat, username, "", noTelepon, password); // Perhatikan perubahan di sini
-        savePengguna(pengguna);
+        Registrasi registrasi = new Registrasi(nama, alamat, username, noTelepon, password); // Perhatikan perubahan di sini
+        saveRegistrasi(registrasi);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
         Stage stage = new Stage();
@@ -121,7 +124,7 @@ public class RegisterController implements Initializable {
 
     private boolean usernameAlreadyExists(String username) {
         try {
-            String query = "SELECT COUNT(*) FROM tblpengguna WHERE username = ?";
+            String query = "SELECT COUNT(*) FROM tbregistrasi WHERE username = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -136,16 +139,15 @@ public class RegisterController implements Initializable {
         return false;
     }
 
-    private void savePengguna(Pengguna pengguna) {
+    private void saveRegistrasi(Registrasi registrasi) {
         try {
-            String sql = "INSERT INTO tblpengguna (nama, alamat, noTelepon, username, password, peran) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO tbregistrasi (nama, alamat, noTelepon, username, password) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, pengguna.getNama());
-            statement.setString(2, pengguna.getAlamat());
-            statement.setString(3, pengguna.getnoTelepon());
-            statement.setString(4, pengguna.getUsername());
-            statement.setString(5, pengguna.getPassword());
-            statement.setString(6, pengguna.getPeran()); // Perhatikan perubahan di sini
+            statement.setString(1, registrasi.getNama());
+            statement.setString(2, registrasi.getAlamat());
+            statement.setString(3, registrasi.getnoTelepon());
+            statement.setString(4, registrasi.getUsername());
+            statement.setString(5, registrasi.getPassword());
 
             statement.executeUpdate();
 

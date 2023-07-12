@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -34,19 +35,20 @@
         </columns>
       </TableView>
       <Button fx:id="pesan" layoutX="195.0" layoutY="535.0" mnemonicParsing="false" onAction="#handleButtonPilihAction" prefHeight="44.0" prefWidth="397.0" styleClass="buttonBiasa" text="Pesan" />
-      <ChoiceBox fx:id="CBpengambilan" layoutX="281.0" layoutY="484.0" prefHeight="40.0" prefWidth="220.0" styleClass="TextField2" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" layoutX="20.0" layoutY="485.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangle" width="220.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="37.0" layoutY="491.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHijau2" width="30.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="195.0" layoutY="492.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHijau2" width="30.0" />
-      <Button fx:id="jumlah" layoutX="195.0" layoutY="492.0" maxWidth="30.0" mnemonicParsing="false" onAction="#handleButtonTambahAction" prefHeight="30.0" prefWidth="30.0" styleClass="buttonTransparan" text="+" />
-      <Button fx:id="kurang" layoutX="37.0" layoutY="491.0" mnemonicParsing="false" onAction="#handleButtonKurangAction" prefHeight="30.0" prefWidth="30.0" styleClass="buttonTransparan1" text="-" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" layoutX="562.0" layoutY="484.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangle" width="220.0" />
-      <Label fx:id="Llokasi" layoutX="602.0" layoutY="493.0" prefHeight="25.0" prefWidth="176.0" />
-      <Label fx:id="LjumlahPesanan" layoutX="73.0" layoutY="494.0" prefHeight="25.0" prefWidth="115.0" />
-      <ImageView layoutX="569.0" layoutY="488.0">
+      <ChoiceBox fx:id="CBpengambilan" layoutX="381.0" layoutY="484.0" prefHeight="40.0" prefWidth="200.0" styleClass="TextField2" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" layoutX="226.0" layoutY="486.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangle" width="150.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="340.0" layoutY="492.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHijau2" width="30.0" />
+      <Button fx:id="jumlah" layoutX="340.0" layoutY="492.0" maxWidth="30.0" mnemonicParsing="false" onAction="#handleButtonTambahAction" prefHeight="30.0" prefWidth="30.0" styleClass="buttonTransparan" text="+" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="235.0" layoutY="491.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangleHijau2" width="30.0" />
+      <Button fx:id="kurang" layoutX="235.0" layoutY="491.0" mnemonicParsing="false" onAction="#handleButtonKurangAction" prefHeight="30.0" prefWidth="30.0" styleClass="buttonTransparan" text="-" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" layoutX="585.0" layoutY="484.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="rectangle" width="200.0" />
+      <Label fx:id="Llokasi" layoutX="624.0" layoutY="493.0" prefHeight="25.0" prefWidth="154.0" />
+      <Label fx:id="LjumlahPesanan" layoutX="270.0" layoutY="494.0" prefHeight="25.0" prefWidth="67.0" textAlignment="CENTER" />
+      <ImageView layoutX="590.0" layoutY="488.0">
          <image>
             <Image url="@../media/Memesan2.png" />
          </image>
       </ImageView>
+      <DatePicker fx:id="DPtanggalPemesanan" layoutX="20.0" layoutY="485.0" prefHeight="40.0" prefWidth="200.0" promptText="Tanggal Pemesanan" styleClass="date-picker" />
    </children>
 </AnchorPane>

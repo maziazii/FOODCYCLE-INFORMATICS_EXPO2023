@@ -1,14 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
- */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import database.DBConnection;
@@ -24,7 +24,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -34,10 +36,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Makanan;
+import model.Session;
+import model.Pemesanan;
 
 /**
- *
- * @author zain
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
  */
 public class MemesanController implements Initializable {
     
@@ -49,6 +56,9 @@ public class MemesanController implements Initializable {
 
     @FXML
     private Label Llokasi;
+
+    @FXML
+    private DatePicker DPtanggalPemesanan;
 
     @FXML
     private TableColumn<Makanan, String> TCJenis;
@@ -87,19 +97,45 @@ public class MemesanController implements Initializable {
     
     private int jumlahPesanan = 0;
 
+    private Makanan selectedMakanan = null;
+
+    private Makanan getSelectedMakanan() {
+        return selectedMakanan;
+    }
+
+    private String getAlamatPenggunaFromDatabase(String username) {
+        String alamatPengguna = "";
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT alamat FROM tbregistrasi WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                alamatPengguna = resultSet.getString(1);
+            } else {
+                showErrorAlert("Pencarian Username", "Username tidak ditemukan!");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Pencarian Alamat Pengguna", "Terjadi kesalahan dalam mendapatkan alamat pengguna!");
+        }
+        return alamatPengguna;
+    }
+
     @FXML
     private void handleButtonKembaliAction(ActionEvent event)  throws Exception{
         System.out.println("tes");
-        FXMLLoader loader = new FXMLLoader(); 
-        loader.setLocation(HomeKonsumenController.class.getResource("/view/HomeKonsumen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeKonsumen.fxml"));
         Stage dialogStage = new Stage(); 
         dialogStage.setTitle("testing");
         dialogStage.initModality(Modality.APPLICATION_MODAL); 
         Scene scene = new Scene(loader.load()); 
         dialogStage.setScene(scene);
-        // Show the dialog and wait until the user closes it dialogStage.showAndWait();
         dialogStage.showAndWait();
-        Stage currentStage = (Stage)((Node) (event.getSource())).getScene().getWindow();
+        Stage currentStage = (Stage)((Node)(event.getSource())).getScene().getWindow();
         currentStage.close();
     }
     
@@ -107,45 +143,65 @@ public class MemesanController implements Initializable {
     private void handleButtonPilihAction(ActionEvent event) throws Exception {
         Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
         String metodePengambilan = CBpengambilan.getValue();
-
+    
         if (selectedMakanan != null) {
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan") || jumlahPesanan == 0) {
-                // Implementasi logika untuk pesanan
-                showErrorAlert("Jumlah & Metode Pengambilan", "Harap tentukan jumlah pesanan dan pilih metode pengambilan terlebih dahulu.");
-            } else if (metodePengambilan.equals("Pilih Metode Pengambilan")) {
-                showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
-            } else if (jumlahPesanan == 0) {
-                showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
-            } else {
-                System.out.println("Memesan makanan: " + selectedMakanan.getNamaMakanan());
-                // Lakukan aksi pengurangan jumlah pesanan dan update label jumlah pesanan
-                jumlahPesanan--;
-                LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
-
-                // Lakukan aksi pengurangan jumlah makanan di database
-                int makanan_id = selectedMakanan.getMakanan_id();
-                updateJumlahMakanan(makanan_id, selectedMakanan.getJumlahMakanan() - 1);
-            }
+            LocalDate today = LocalDate.now();
+            LocalDate tanggalKadaluwarsa = LocalDate.parse(selectedMakanan.getTanggalKadaluwarsa());
+            
+            LocalDate tanggalPemesanan = DPtanggalPemesanan.getValue();
+            
+            if (tanggalPemesanan != null && tanggalPemesanan.isEqual(today)) {
+                if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
+                    showErrorAlert("Jumlah & Metode Pengambilan", "Harap tentukan jumlah pesanan dan pilih metode pengambilan terlebih dahulu.");
+                } else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
+                    showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
+                } else if (jumlahPesanan == 0) {
+                    showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
+                } else {
+                    Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, metodePengambilan, Llokasi.getText(), "");
+                    pemesanan.setStatus("");
+                    
+                    saveDataToDatabase(pemesanan);
+    
+                    // Mengurangi stok makanan
+                    int stokMakanan = selectedMakanan.getJumlahMakanan();
+                    selectedMakanan.setJumlahMakanan(stokMakanan);
+                    updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
+                    
+                    showSuccessAlert();
+                }
+            } else if(tanggalPemesanan == null || tanggalPemesanan.isAfter(today) || tanggalPemesanan.isBefore(today)){
+                showErrorAlert("Tanggal Pemesanan", "Harap pilih tanggal pemesanan hari ini.");
+            } else if (tanggalKadaluwarsa.isBefore(today)) {
+                showKadaluwarsaAlert(selectedMakanan);
+                return;
+            } 
         } else {
-            if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan") || jumlahPesanan == 0) {
+            if ((metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) && jumlahPesanan == 0) {
                 showErrorAlert("Lengkapi Data Pemesanan", "Harap pilih makanan, jumlah pesanan, dan metode pengambilan terlebih dahulu.");
-            }else if (metodePengambilan.equals("Pilih Metode Pengambilan")) {
+            } else if (metodePengambilan == null || metodePengambilan.equals("Pilih Metode Pengambilan")) {
                 showErrorAlert("Metode Pengambilan", "Maaf, pilih metode pengambilan terlebih dahulu.");
             } else if (jumlahPesanan == 0) {
                 showErrorAlert("Jumlah Pesanan", "Jumlah pesanan harus lebih dari nol.");
             }
         }
-
-    }
+    }    
 
     @FXML
     private void handleButtonKurangAction(ActionEvent event) {
+        Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
         if (jumlahPesanan > 0) {
-            jumlahPesanan--;
-            LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+            int stokMakanan = selectedMakanan.getJumlahMakanan();
+            if (selectedMakanan != null) {
+                jumlahPesanan--;
+                LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+                stokMakanan++;
+                selectedMakanan.setJumlahMakanan(stokMakanan);
+            }
         } else {
             showErrorAlert("Jumlah Pesanan", "Jumlah pesanan tidak bisa kurang dari nol.");
         }
+        TVMemesan.refresh();
     }
 
     @FXML
@@ -154,43 +210,55 @@ public class MemesanController implements Initializable {
         if (selectedMakanan != null) {
             int stokMakanan = selectedMakanan.getJumlahMakanan();
             if (stokMakanan > 0) {
-                jumlahPesanan++;
-                LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
+                if (jumlahPesanan == 0) {
+                    jumlahPesanan = 1;
+                } else {
+                    jumlahPesanan++;
+                }
+                LjumlahPesanan.setText (String.valueOf(jumlahPesanan));
                 stokMakanan--;
                 selectedMakanan.setJumlahMakanan(stokMakanan);
-                updateJumlahMakanan(selectedMakanan.getMakanan_id(), stokMakanan);
             } else {
                 showErrorAlert("Stok Makanan", "Stok makanan tidak mencukupi.");
             }
         } else {
             showErrorAlert("Pilih Makanan", "Harap pilih makanan terlebih dahulu.");
         }
+        TVMemesan.refresh();
     }
-
-    private void updateJumlahMakanan(int makanan_id, int jumlahMakanan) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "UPDATE tblmakanan SET jumlahMakanan = ? WHERE makanan_id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, jumlahMakanan);
-            statement.setInt(2, makanan_id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Tampilkan alert kesalahan
-            showErrorAlert("Error", "Failed to update data in the database.");
+    
+    private void updateJumlahMakanan(int idMakanan, int jumlahMakanan) {
+        if (jumlahMakanan == 0) {
+            Makanan selectedMakanan = getSelectedMakanan();
+            if (selectedMakanan != null) {
+                // Menghapus makanan dari tabel
+                makananList.remove(selectedMakanan);
+            }
+            deleteMakananFromDatabase(idMakanan);
+        } else {
+            try {
+                Connection connection = DBConnection.getConnection();
+                String query = "UPDATE tbmakanan SET jumlahMakanan = ? WHERE idMakanan = ?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setInt(1, jumlahMakanan);
+                statement.setInt(2, idMakanan);
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showErrorAlert("Error", "Failed to update data in the database.");
+            }
         }
     }
 
     private void loadDataFromDatabase() {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM tblmakanan";
+            String query = "SELECT * FROM tbmakanan";
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                int makanan_id = resultSet.getInt("makanan_id");
+                int idMakanan = resultSet.getInt("idMakanan");
                 String tanggalPenawaran = resultSet.getString("tanggalPenawaran");
                 String namaMakanan = resultSet.getString("namaMakanan");
                 int jumlahMakanan = resultSet.getInt("jumlahMakanan");
@@ -198,12 +266,11 @@ public class MemesanController implements Initializable {
                 String jenisMakanan = resultSet.getString("jenisMakanan");
                 String tanggalKadaluwarsa = resultSet.getString("tanggalKadaluwarsa");
 
-                Makanan makanan = new Makanan(makanan_id, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa);
+                Makanan makanan = new Makanan(idMakanan, tanggalPenawaran, namaMakanan, jumlahMakanan, lokasiPengambilan, jenisMakanan, tanggalKadaluwarsa);
                 makananList.add(makanan);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Tampilkan alert kesalahan
             showErrorAlert("Error", "Failed to load data from database.");
         }
     }
@@ -224,9 +291,191 @@ public class MemesanController implements Initializable {
         alert.showAndWait();
     }
 
+    private void showKadaluwarsaAlert(Makanan selectedMakanan) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Makanan Kadaluwarsa");
+        alert.setHeaderText(null);
+        alert.setContentText("Makanan yang dipilih (" + selectedMakanan.getNamaMakanan() + ") sudah kadaluwarsa.\nApakah Anda ingin melanjutkan pemesanan?");
+    
+        ButtonType lanjutkanButton = new ButtonType("Lanjutkan");
+        ButtonType batalkanButton = new ButtonType("Batalkan");
+    
+        alert.getButtonTypes().setAll(lanjutkanButton, batalkanButton);
+    
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResource("/media/attention.png").toString()));
+    
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/CSSFoodCycle.css").toExternalForm());
+        dialogPane.getStyleClass().add("alert-error");
+    
+        Optional<ButtonType> result = alert.showAndWait();
+    
+        if (result.isPresent()) {
+            if (result.get() == lanjutkanButton) {
+                updateDataPemesanan(selectedMakanan);
+            } else if (result.get() == batalkanButton) {
+                kembalikanDataMakanan(selectedMakanan);
+            }
+        }
+    }
+
+    private void showSuccessAlert() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Pesanan Berhasil Terkirim");
+        alert.setHeaderText(null);
+        alert.setContentText("Data pemesanan berhasil dikirim. Apakah anda akan melakukan pemesanan baru?");
+        
+        ButtonType okButton = new ButtonType("TIDAK");
+        ButtonType penawaranBaruButton = new ButtonType("Pemesanan Baru");
+
+        alert.getButtonTypes().setAll(okButton, penawaranBaruButton);
+
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResource("/media/checklist.png").toString()));
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/CSSFoodCycle.css").toExternalForm());
+        dialogPane.getStyleClass().add("alert-success");
+        
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent()) {
+            if (result.get() == okButton) {
+                alert.close();
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HomeKonsumen.fxml"));
+                    Stage homeKonsumenStage = new Stage();
+                    homeKonsumenStage.setTitle("Home Konsumen");
+                    homeKonsumenStage.setScene(new Scene(loader.load()));
+                    homeKonsumenStage.initModality(Modality.APPLICATION_MODAL);
+                    homeKonsumenStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (result.get() == penawaranBaruButton) {
+                jumlahPesanan = 0;
+                LjumlahPesanan.setText("0");
+                resetForm();
+            }
+        }
+    }
+
+    private void deleteMakananFromDatabase(int idMakanan) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "DELETE FROM tbmakanan WHERE idMakanan = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idMakanan);
+            statement.executeUpdate();
+            statement.close();
+            makananList.removeIf(makanan -> makanan.getIdMakanan() == idMakanan);
+            System.out.println("Data successfully deleted from the database.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "Failed to delete data from the database.");
+        }
+    }
+
+    private void updateDataPemesanan(Makanan selectedMakanan) {
+        Pemesanan pemesanan = new Pemesanan(0, selectedMakanan.getIdMakanan(), 0, DPtanggalPemesanan.getValue().toString(), selectedMakanan.getNamaMakanan(), jumlahPesanan, CBpengambilan.getValue(), Llokasi.getText(), "");
+
+        saveDataToDatabase(pemesanan);
+    
+        int stokMakanan = selectedMakanan.getJumlahMakanan();
+        stokMakanan -= jumlahPesanan;
+        selectedMakanan.setJumlahMakanan(stokMakanan);
+        updateJumlahMakanan(selectedMakanan.getIdMakanan(), stokMakanan);
+    
+        if (stokMakanan < 1) {
+            makananList.remove(selectedMakanan);
+            deleteMakananFromDatabase(selectedMakanan.getIdMakanan());
+        }
+
+        showSuccessAlert();
+    }
+
+    private void kembalikanDataMakanan(Makanan selectedMakanan) {
+        Makanan makanan = new Makanan(selectedMakanan.getIdMakanan(), selectedMakanan.getTanggalPenawaran(), selectedMakanan.getNamaMakanan(), selectedMakanan.getJumlahMakanan() + jumlahPesanan, selectedMakanan.getLokasiPengambilan(), selectedMakanan.getJenisMakanan(), selectedMakanan.getTanggalKadaluwarsa());
+        updateJumlahMakanan(selectedMakanan.getIdMakanan(), makanan.getJumlahMakanan());
+        makananList.set(makananList.indexOf(selectedMakanan), makanan);
+    }
+
+
+    
+    private void resetForm() {
+        jumlahPesanan = 0;
+        LjumlahPesanan.setText("0");
+
+        DPtanggalPemesanan.setValue(null);
+        CBpengambilan.getSelectionModel().clearSelection();
+        Llokasi.setText("");
+    }
+
+    private int getIdPengguna(String username) {
+        int idPengguna = 0;
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT idPengguna FROM tbregistrasi WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                idPengguna = resultSet.getInt(1);
+            } else {
+                showErrorAlert("Pencarian Username", "Username tidak ditemukan!");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Pencarian id Pengguna", "Terjadi kesalahan dalam mendapatkan idPengguna!");
+        }
+        return idPengguna;
+    }
+
+    private void saveDataToDatabase(Pemesanan pemesanan) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "INSERT INTO tbpemesanan (idPengguna, idMakanan, tanggalPemesanan, namaMakanan, jumlahPemesanan, metodePengambilan, lokasiMetode, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            String username = Session.getLoggedInUsername();
+            int idPengguna = getIdPengguna(username);
+
+            statement.setInt(1, idPengguna);
+            statement.setInt(2, pemesanan.getIdMakanan());
+            statement.setString(3, pemesanan.getTanggalPemesanan());
+            statement.setString(4, pemesanan.getNamaMakanan());
+            statement.setInt(5, pemesanan.getJumlahPemesanan());
+            statement.setString(6, pemesanan.getMetodePengambilan());
+            statement.setString(7, pemesanan.getLokasiMetode());
+            statement.setString(8, pemesanan.getStatus());
+
+            statement.executeUpdate();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int idPemesanan = generatedKeys.getInt(1);
+                pemesanan.setIdPemesanan(idPemesanan);
+            }
+
+            generatedKeys.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "Failed to save data to the database.");
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        makananList = FXCollections.observableArrayList();
         // TODO
+        Object connection = DBConnection.getConnection();
+        if (connection == null) {
+            showErrorAlert("Connection", "Gagal terhubung ke database!");
+        }
+
         TCTanggal.setCellValueFactory(new PropertyValueFactory<>("tanggalPenawaran"));
         TCNama.setCellValueFactory(new PropertyValueFactory<>("namaMakanan"));
         TCJumlah.setCellValueFactory(new PropertyValueFactory<>("jumlahMakanan"));
@@ -237,9 +486,8 @@ public class MemesanController implements Initializable {
         // Mengatur ObservableList sebagai data sumber TableView
         TVMemesan.setItems(makananList);
 
-        // Panggil metode untuk mengambil data dari database dan menambahkannya ke makananList
         loadDataFromDatabase();
-
+        
         ObservableList<String> options = FXCollections.observableArrayList(
             "Pilih Metode Pengambilan",
             "Makanan Diantar",
@@ -252,18 +500,29 @@ public class MemesanController implements Initializable {
         CBpengambilan.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Pilih Metode Pengambilan")) {
                 CBpengambilan.getSelectionModel().clearSelection();
-                // } else if (newValue.equals("Makanan Diantar")) {
-                //     // Tampilkan lokasi dari database DBregister di label
-                //     String username = getUsernameLoggedIn(); // Mendapatkan username yang sedang digunakan
-                //     String lokasiPengambilan = getLokasiPengambilan(username); // Mendapatkan lokasi pengambilan dari database DBregister berdasarkan username
-                //     Llokasi.setText(lokasiPengambilan);
-                // } else if (newValue.equals("Ambil Langsung")) {
-                //     // Tampilkan lokasi makanan dari database DBMakanan di label
-                //     String lokasiMakanan = getLokasiMakanan(); // Mendapatkan lokasi makanan dari database DBMakanan
-                //     Llokasi.setText(lokasiMakanan);
-        } else {
-                // Lakukan tindakan lain sesuai pilihan pengguna
+                Llokasi.setText("");
+            } else if (newValue.equals("Makanan Diantar")) {
+                String username = Session.getLoggedInUsername();
+                String alamatPengguna = getAlamatPenggunaFromDatabase(username);
+                Llokasi.setText(alamatPengguna);
+            } else if (newValue.equals("Ambil Langsung")) {
+                Makanan selectedMakanan = TVMemesan.getSelectionModel().getSelectedItem();
+                if (selectedMakanan != null) {
+                    String lokasiPengambilan = selectedMakanan.getLokasiPengambilan();
+                    Llokasi.setText(lokasiPengambilan);
+                } else {
+                    Llokasi.setText("");
+                }
+            } else {
+                Llokasi.setText("");
             }
+        });
+        
+        TVMemesan.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                resetForm();
+            }
+            TVMemesan.refresh();
         });
 
         LjumlahPesanan.setText(String.valueOf(jumlahPesanan));
@@ -271,8 +530,11 @@ public class MemesanController implements Initializable {
         makananList.addListener((ListChangeListener<Makanan>) change -> {
             while (change.next()) {
                 if (change.wasRemoved()) {
-                    TVMemesan.getItems().clear();
-                    TVMemesan.getItems().addAll(makananList);
+                    for (Makanan removedMakanan : change.getRemoved()) {
+                        if (removedMakanan.getJumlahMakanan() <= 0) {
+                            deleteMakananFromDatabase(removedMakanan.getIdMakanan());
+                        }
+                    }
                 }
             }
         });

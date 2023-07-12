@@ -4,10 +4,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+
+/**
+ * @author LEMTIKOM
+ * Muhamad Azis - 22523289
+ * Andi Arya Tri Buana Agung - 22523299
+ * Pugar Huda Mantoro - 22523045
+ * Muhammad Haris Rusnanda - 22523282
+ */
 public class DBConnection {
-    private static final String DB_URL = "jdbc:mysql://aws.connect.psdb.cloud/dbfoodcycle?sslMode=VERIFY_IDENTITY";
-    private static final String USERNAME = "wn13qlo7ekzr2extk4pb";
-    private static final String PASSWORD = "pscale_pw_WpLBD7YKBM72gT7IsiBJ6uhSM5X0ihYdv37xbhig1tX";
+    private static final String DB_URL = "jdbc:mysql://aws.connect.psdb.cloud/foodcycle?sslMode=VERIFY_IDENTITY";
+    private static final String USERNAME = "hr68d6ypo2sfe8p8uv5b";
+    private static final String PASSWORD = "pscale_pw_j140KSL2BACgELqQ8yHVVpRei2FL186hBMAunUbLg8A";
 
     private static Connection connection;
 

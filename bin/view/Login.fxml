@@ -46,6 +46,6 @@
          </image>
       </ImageView>
       <Text layoutX="463.0" layoutY="570.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textHjauW500" text="Sudah punya akun?" textAlignment="CENTER" wrappingWidth="167.0" />
-      <Button fx:id="register" layoutX="620.0" layoutY="547.0" mnemonicParsing="false" onAction="#handleButtonRegisterAction" styleClass="buttonTransparan1" text="Register" underline="true" />
+      <Button fx:id="register" layoutX="620.0" layoutY="547.0" mnemonicParsing="false" onAction="#handleButtonRegisterAction" styleClass="buttonTransparan1" text="Register" textFill="#0719da" underline="true" />
    </children>
 </AnchorPane>
